@@ -62,7 +62,41 @@
       }
   </script>
 <meta name="generator" content="Hexo 8.1.1"></head>
-<body>
+<body><!-- hexo injector body_begin start -->
+<style>
+  .video-bg-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+    overflow: hidden;
+  }
+  .video-bg-container video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .video-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: -1;
+    pointer-events: none;
+  }
+</style>
+
+<div class="video-bg-container">
+  <video autoplay loop muted playsinline>
+    <source src="/video/bg.mp4" type="video/mp4">
+  </video>
+</div>
+<div class="video-overlay"></div>
+<!-- hexo injector body_begin end -->
   <div id="container">
     <div class="left-col">
     <div class="overlay"></div>
