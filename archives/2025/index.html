@@ -191,18 +191,27 @@
 <!-- hexo injector head_end end --><meta name="generator" content="Hexo 8.1.1"></head>
 <body><!-- hexo injector body_begin start -->
 <div id="bg-video-wrap" style="position:fixed;inset:0;z-index:0;overflow:hidden;background:#111 url('/img/bg-video-poster.jpg') center/cover no-repeat;pointer-events:none;">
-  <video id="bg-video" loop muted playsinline preload="metadata" poster="/img/bg-video-poster.jpg"
-    style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;"
-    src="/video/bg.mp4">
+  <video id="bg-video" loop muted playsinline preload="auto" poster="/img/bg-video-poster.jpg"
+    style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 0.8s;">
   </video>
 </div>
-<div id="bg-video-start-hint" style="position:fixed;bottom:30px;left:50%;transform:translateX(-50%);z-index:999;background:rgba(0,0,0,0.65);color:rgba(255,255,255,0.85);padding:8px 20px;border-radius:20px;font-size:13px;cursor:pointer;pointer-events:auto;transition:opacity 0.6s;font-family:sans-serif;">
-  ▶ 点击启用动态背景
+<div id="bg-video-loader" style="position:fixed;bottom:30px;left:50%;transform:translateX(-50%);z-index:999;pointer-events:none;font-family:sans-serif;transition:opacity 0.6s;">
+  <div style="display:flex;align-items:center;gap:8px;background:rgba(0,0,0,0.55);padding:6px 16px;border-radius:16px;">
+    <div id="bg-video-loader-dot" style="width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.7);animation:yinhe-pulse 1.2s infinite;"></div>
+    <span id="bg-video-loader-text" style="font-size:12px;color:rgba(255,255,255,0.8);">加载背景视频...</span>
+  </div>
 </div>
+<style>
+  @keyframes yinhe-pulse {
+    0%,100% { opacity:0.35; transform:scale(0.9); }
+    50% { opacity:1; transform:scale(1.15); }
+  }
+</style>
 <script>
 (function() {
   var v = document.getElementById('bg-video');
-  var hint = document.getElementById('bg-video-start-hint');
+  var loader = document.getElementById('bg-video-loader');
+  var loaderText = document.getElementById('bg-video-loader-text');
   if (!v) return;
 
   v.muted = true;
@@ -212,24 +221,32 @@
   v.loop = true;
   v.playsInline = true;
 
+  var VIDEO_URL = '/video/bg.mp4';
+  var CACHE_NAME = 'yinhe-bg-video-v1';
   var started = false;
-  var storageKey = 'yinhe-blog-video-started';
+  var loaderHidden = false;
+
+  function hideLoader() {
+    if (loaderHidden) return;
+    loaderHidden = true;
+    if (loader) loader.style.opacity = '0';
+    setTimeout(function() { if (loader) loader.remove(); }, 700);
+  }
 
   function onStart() {
     if (started) return;
     started = true;
-    try { localStorage.setItem(storageKey, '1'); } catch(e) {}
-    if (hint) hint.style.opacity = '0';
-    setTimeout(function() { if (hint) hint.remove(); }, 700);
+    v.style.opacity = '1';
+    hideLoader();
   }
 
   function tryPlay() {
     if (started) return;
     var promise = v.play();
     if (promise && promise.then) {
-      promise.then(function() {
-        onStart();
-      }).catch(function(){});
+      promise.then(onStart).catch(function(e) {
+        // Autoplay blocked — will retry on user gesture or next event
+      });
     }
   }
 
@@ -239,53 +256,115 @@
   v.addEventListener('canplaythrough', tryPlay);
   v.addEventListener('playing', onStart);
 
-  // Try muted autoplay immediately (Chrome allows this)
-  var autoTried = false;
-  function autoPlay() {
-    if (autoTried || started) return;
-    autoTried = true;
-    // Force load and play
+  // Fallback: if video doesn't start within 8 seconds of setting src, try again
+  var fallbackTimer = null;
+  function resetFallback() {
+    clearTimeout(fallbackTimer);
+    fallbackTimer = setTimeout(function() {
+      if (!started) { v.load(); tryPlay(); }
+    }, 8000);
+  }
+
+  // Set blob URL as video source and attempt playback
+  function setVideoBlob(blob) {
+    var url = URL.createObjectURL(blob);
+    v.src = url;
     v.load();
-    setTimeout(tryPlay, 200);
-    setTimeout(tryPlay, 800);
-    setTimeout(tryPlay, 2000);
+    resetFallback();
+    tryPlay();
   }
 
-  // Check if video already started in previous visit
-  var wasStarted = false;
-  try { wasStarted = localStorage.getItem(storageKey) === '1'; } catch(e) {}
-
-  if (wasStarted) {
-    // Previously started - try aggressive autoplay
-    autoPlay();
-    // Hide hint faster
-    if (hint) hint.style.opacity = '0.5';
-  } else {
-    // First visit - also try autoplay, but show hint
-    autoPlay();
+  // Try to get video from Cache API first
+  function loadFromCache() {
+    if (!window.caches) return Promise.reject('no cache api');
+    return caches.open(CACHE_NAME).then(function(cache) {
+      return cache.match(VIDEO_URL).then(function(response) {
+        if (!response) throw new Error('not in cache');
+        return response.blob();
+      });
+    });
   }
 
-  // User interaction: start playback (works because of user gesture)
+  // Download video and store in Cache API
+  function downloadAndCache() {
+    if (loaderText) loaderText.textContent = '下载背景视频...';
+    return fetch(VIDEO_URL, { cache: 'reload' }).then(function(response) {
+      if (!response.ok) throw new Error('HTTP ' + response.status);
+      var contentLength = response.headers.get('content-length');
+      var total = contentLength ? parseInt(contentLength, 10) : 0;
+      var loaded = 0;
+
+      // Stream with progress if supported
+      if (response.body && window.ReadableStream && total > 0) {
+        var reader = response.body.getReader();
+        var chunks = [];
+        function pump() {
+          return reader.read().then(function(result) {
+            if (result.done) {
+              var blob = new Blob(chunks, { type: 'video/mp4' });
+              return blob;
+            }
+            chunks.push(result.value);
+            loaded += result.value.length;
+            if (loaderText && total > 0) {
+              var pct = Math.round(loaded / total * 100);
+              loaderText.textContent = '下载中 ' + pct + '%';
+            }
+            return pump();
+          });
+        }
+        return pump();
+      }
+
+      // Fallback: no streaming support
+      return response.blob().then(function(blob) {
+        if (loaderText) loaderText.textContent = '处理视频...';
+        return blob;
+      });
+    }).then(function(blob) {
+      // Store in Cache API for next visit
+      if (window.caches) {
+        caches.open(CACHE_NAME).then(function(cache) {
+          cache.put(VIDEO_URL, new Response(blob, {
+            status: 200,
+            headers: { 'Content-Type': 'video/mp4', 'Content-Length': String(blob.size) }
+          }));
+        });
+      }
+      return blob;
+    });
+  }
+
+  // Main flow
+  function init() {
+    // Try cache first (instant load for return visitors)
+    loadFromCache().then(function(blob) {
+      if (loaderText) loaderText.textContent = '加载缓存...';
+      setVideoBlob(blob);
+    }).catch(function() {
+      // Not in cache — download
+      downloadAndCache().then(function(blob) {
+        setVideoBlob(blob);
+      }).catch(function(err) {
+        if (loaderText) loaderText.textContent = '视频加载失败';
+      });
+    });
+  }
+
+  // User gesture retry (in case autoplay was blocked)
   function onUser(e) {
     if (started) return;
-    // Ignore if clicking on links
+    // Don't intercept clicks on links
     if (e && e.target && (e.target.tagName === 'A' || e.target.closest('a'))) return;
-    v.load(); // Force fresh load in user gesture context
+    v.load();
     tryPlay();
-    // Retry a few times in the gesture context
-    setTimeout(tryPlay, 150);
-    setTimeout(tryPlay, 500);
+    setTimeout(tryPlay, 200);
   }
   document.addEventListener('click', onUser);
   document.addEventListener('touchstart', onUser);
-  document.addEventListener('keydown', onUser, { once: true });
 
-  // Also try on scroll/wheel (these count as user interaction)
-  function onScroll() {
-    if (started) tryPlay();
-    window.removeEventListener('scroll', onScroll);
-  }
-  window.addEventListener('scroll', onScroll, { passive: true });
+  // Start
+  init();
 })();
 </script>
 <!-- hexo injector body_begin end -->
