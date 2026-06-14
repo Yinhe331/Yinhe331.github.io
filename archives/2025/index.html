@@ -195,14 +195,9 @@
     style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 0.8s;">
   </video>
 </div>
-<div id="bg-video-status" style="position:fixed;bottom:30px;left:50%;transform:translateX(-50%);z-index:999;font-family:sans-serif;transition:opacity 0.6s;">
-  <span id="bg-video-status-text" style="display:inline-block;background:rgba(0,0,0,0.5);color:rgba(255,255,255,0.8);padding:6px 16px;border-radius:16px;font-size:12px;pointer-events:auto;cursor:default;">加载中...</span>
-</div>
 <script>
 (function() {
   var v = document.getElementById('bg-video');
-  var statusEl = document.getElementById('bg-video-status');
-  var statusText = document.getElementById('bg-video-status-text');
   if (!v) return;
 
   v.muted = true;
@@ -213,24 +208,17 @@
   v.playsInline = true;
 
   var VIDEO_URL = '/video/bg.mp4';
-  var CACHE_NAME = 'yinhe-bg-v1';
+  var CACHE_NAME = 'yinhe-bg-v2';
   var started = false;
-  var blobReady = false;
-
-  function hideStatus() {
-    if (statusEl) { statusEl.style.opacity = '0'; }
-    setTimeout(function() { if (statusEl) statusEl.remove(); }, 700);
-  }
 
   function onStart() {
     if (started) return;
     started = true;
     v.style.opacity = '1';
-    hideStatus();
   }
 
   function tryPlay() {
-    if (started || !blobReady) return;
+    if (started) return;
     var p = v.play();
     if (p && p.then) { p.then(onStart).catch(function(){}); }
   }
@@ -240,20 +228,17 @@
   v.addEventListener('canplaythrough', tryPlay);
   v.addEventListener('playing', onStart);
 
-  // Use blob URL & start playback
-  function setBlob(blob) {
+  function setBlobAndPlay(blob) {
     var url = URL.createObjectURL(blob);
     v.src = url;
-    blobReady = true;
     v.load();
     tryPlay();
-    // Retry if not started
+    // Retry once if first attempt didn't work
     setTimeout(function() { if (!started) { v.load(); tryPlay(); } }, 3000);
-    setTimeout(function() { if (!started) { v.load(); tryPlay(); } }, 8000);
   }
 
-  // Cache API: load from cache
-  function fromCache() {
+  // Try Cache API first (instant for return visitors)
+  function loadFromCache() {
     if (!window.caches) return Promise.reject('no-cache-api');
     return caches.open(CACHE_NAME).then(function(c) {
       return c.match(VIDEO_URL).then(function(r) {
@@ -263,13 +248,12 @@
     });
   }
 
-  // Fetch and cache
-  function download() {
+  // Fetch video and store in Cache API
+  function downloadAndCache() {
     return fetch(VIDEO_URL).then(function(r) {
       if (!r.ok) throw new Error('HTTP ' + r.status);
       return r.blob();
     }).then(function(blob) {
-      // Store in Cache API
       if (window.caches) {
         caches.open(CACHE_NAME).then(function(c) {
           c.put(VIDEO_URL, new Response(blob, {
@@ -282,46 +266,10 @@
     });
   }
 
-  // Click fallback: try direct playback if blob hasn't loaded
-  var clickHintShown = false;
-  function showClickHint() {
-    if (clickHintShown || started || blobReady) return;
-    clickHintShown = true;
-    if (statusText) {
-      statusText.textContent = '点击任意位置启用背景';
-      statusText.style.cursor = 'pointer';
-    }
-  }
-
-  function onUser(e) {
-    if (started) return;
-    if (e && e.target && (e.target.tagName === 'A' || e.target.closest('a'))) return;
-    if (blobReady) { tryPlay(); return; }
-    // Blob not ready, try direct src as last resort
-    v.src = VIDEO_URL;
-    v.load();
-    setTimeout(function() { v.play().then(onStart).catch(function(){}); }, 300);
-    setTimeout(function() { v.play().then(onStart).catch(function(){}); }, 1500);
-  }
-  document.addEventListener('click', onUser);
-  document.addEventListener('touchstart', onUser);
-
-  // Main
-  fromCache().then(function(blob) {
-    // Cached! Instant.
-    if (statusText) statusText.textContent = '';
-    setBlob(blob);
-  }).catch(function() {
-    // Not cached. Download.
-    download().then(function(blob) {
-      setBlob(blob);
-    }).catch(function() {
-      if (statusText) statusText.textContent = '视频加载失败';
-    });
+  // Start
+  loadFromCache().then(setBlobAndPlay).catch(function() {
+    downloadAndCache().then(setBlobAndPlay);
   });
-
-  // Show click hint if download takes too long
-  setTimeout(showClickHint, 5000);
 })();
 </script>
 <!-- hexo injector body_begin end -->
