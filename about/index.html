@@ -194,6 +194,7 @@
 <body><!-- hexo injector body_begin start -->
 <div id="bg-video-wrap" style="position:fixed;inset:0;z-index:0;overflow:hidden;background:#111 url('/img/bg-video-poster.jpg') center/cover no-repeat;pointer-events:none;">
   <video id="bg-video" loop muted playsinline poster="/img/bg-video-poster.jpg"
+    src="/video/bg.mp4"
     style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 0.8s;">
   </video>
 </div>
@@ -209,12 +210,9 @@
   v.muted = true;
   v.volume = 0;
   v.defaultMuted = true;
-  v.autoplay = true;
-  v.loop = true;
-  v.playsInline = true;
 
   var VIDEO_URL = '/video/bg.mp4';
-  var CACHE_NAME = 'yinhe-bg-v2';
+  var CACHE_NAME = 'yinhe-bg-v3';
   var started = false;
 
   function onStart() {
@@ -224,83 +222,100 @@
     if (dbg) { dbg.style.opacity = '0'; setTimeout(function(){ dbg.remove(); }, 500); }
   }
 
-  function tryPlay() {
-    if (started) return;
+  v.addEventListener('loadedmetadata', function() { log('meta'); });
+  v.addEventListener('playing', onStart);
+  v.addEventListener('error', function() {
+    log('err:' + (v.error ? v.error.code : '?'));
+    // Fallback: try blob approach
+    tryBlob();
+  });
+
+  // Try direct autoplay
+  function tryDirect() {
+    log('try direct');
     var p = v.play();
     if (p && p.then) {
       p.then(onStart).catch(function(e) {
-        log('autoplay blocked: ' + (e ? e.name : '?'));
+        log('direct blocked: ' + (e ? e.name : '?'));
+        // Fallback: try blob approach
+        tryBlob();
       });
     }
   }
 
-  v.addEventListener('loadedmetadata', function() { log('got meta'); tryPlay(); });
-  v.addEventListener('canplay', function() { log('canplay'); tryPlay(); });
-  v.addEventListener('canplaythrough', function() { log('canplaythru'); tryPlay(); });
-  v.addEventListener('playing', onStart);
-  v.addEventListener('error', function() {
-    log('video error: ' + (v.error ? v.error.code : '?'));
-  });
+  // Blob approach fallback
+  var blobTried = false;
+  function tryBlob() {
+    if (blobTried) return;
+    blobTried = true;
+    log('blob fallback');
 
-  function setBlobAndPlay(blob) {
-    log('blob ready ' + (blob.size/1024).toFixed(0) + 'KB');
-    var url = URL.createObjectURL(blob);
-    v.src = url;
-    v.load();
-    tryPlay();
-    setTimeout(function() { if (!started) { v.load(); tryPlay(); } }, 2000);
-    setTimeout(function() { if (!started) { v.load(); tryPlay(); } }, 5000);
-  }
+    function setBlob(blob) {
+      log('blob ' + (blob.size/1024).toFixed(0) + 'KB');
+      var url = URL.createObjectURL(blob);
+      v.src = url;
+      v.load();
+      setTimeout(function() {
+        if (!started) {
+          log('play blob');
+          v.play().then(onStart).catch(function(e) {
+            log('blob blocked: ' + (e ? e.name : '?'));
+          });
+        }
+      }, 200);
+    }
 
-  // Cache API
-  function fromCache() {
-    if (!window.caches) return Promise.reject('no caches');
-    return caches.open(CACHE_NAME).then(function(c) {
-      return c.match(VIDEO_URL).then(function(r) {
-        if (!r) throw new Error('miss');
-        log('cache hit');
+    function fromCache() {
+      if (!window.caches) return Promise.reject('no caches');
+      return caches.open(CACHE_NAME).then(function(c) {
+        return c.match(VIDEO_URL).then(function(r) {
+          if (!r) throw new Error('miss');
+          return r.blob();
+        });
+      });
+    }
+
+    function fetchAndCache() {
+      return fetch(VIDEO_URL).then(function(r) {
+        if (!r.ok) throw new Error('HTTP ' + r.status);
         return r.blob();
+      }).then(function(blob) {
+        if (window.caches) {
+          caches.open(CACHE_NAME).then(function(c) {
+            c.put(VIDEO_URL, new Response(blob, {
+              status: 200, headers: { 'Content-Type': 'video/mp4' }
+            }));
+          });
+        }
+        return blob;
+      });
+    }
+
+    fromCache().then(setBlob).catch(function() {
+      fetchAndCache().then(setBlob).catch(function(err) {
+        log('FAIL: ' + err);
       });
     });
   }
 
-  // Fetch
-  function download() {
-    log('fetching ' + VIDEO_URL);
-    return fetch(VIDEO_URL).then(function(r) {
-      if (!r.ok) throw new Error('HTTP ' + r.status);
-      log('fetched ' + r.status);
-      return r.blob();
-    }).then(function(blob) {
-      if (window.caches) {
-        caches.open(CACHE_NAME).then(function(c) {
-          c.put(VIDEO_URL, new Response(blob, {
-            status: 200, headers: { 'Content-Type': 'video/mp4' }
-          }));
-        });
-      }
-      return blob;
-    });
-  }
-
-  // User click fallback — if autoplay blocked, click triggers play
+  // Click fallback
   function onUser(e) {
     if (started) return;
     if (e && e.target && (e.target.tagName === 'A' || e.target.closest('a'))) return;
-    log('click retry');
-    tryPlay();
-    setTimeout(function() { if (!started) { v.load(); tryPlay(); } }, 200);
+    log('click');
+    v.play().then(onStart).catch(function(e) {
+      log('click fail: ' + (e ? e.name : '?'));
+    });
   }
   document.addEventListener('click', onUser);
   document.addEventListener('touchstart', onUser);
 
-  // Start
-  fromCache().then(setBlobAndPlay).catch(function(e) {
-    log('cache miss: ' + e);
-    download().then(setBlobAndPlay).catch(function(err) {
-      log('FAIL: ' + err);
-    });
-  });
+  // Wait for load then try
+  if (v.readyState >= 2) {
+    tryDirect();
+  } else {
+    v.addEventListener('loadeddata', tryDirect);
+  }
 })();
 </script>
 <!-- hexo injector body_begin end -->
@@ -843,58 +858,6 @@
 
   </div>
 <!-- hexo injector body_end start -->
-<style>
-  #live2dcanvas {
-    right: 96px !important;
-    bottom: 48px !important;
-    z-index: 98 !important;
-    pointer-events: auto;
-    background: radial-gradient(circle at 50% 58%, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0) 62%) !important;
-    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.42));
-  }
-
-  @media (max-width: 768px) {
-    #live2dcanvas {
-      display: none !important;
-    }
-  }
-</style>
-<script>
-  (function () {
-    if (window.__yinheLive2dLoaded) return;
-    window.__yinheLive2dLoaded = true;
-
-    function initLive2D() {
-      if (!window.L2Dwidget) return;
-      window.L2Dwidget.init({
-        model: {
-          jsonPath: 'https://unpkg.com/live2d-widget-model-hijiki@1.0.5/assets/hijiki.model.json'
-        },
-        display: {
-          position: 'right',
-          width: 160,
-          height: 220,
-          hOffset: 96,
-          vOffset: 48
-        },
-        mobile: {
-          show: false
-        },
-        react: {
-          opacityDefault: 0.88,
-          opacityOnHover: 1
-        }
-      });
-    }
-
-    var script = document.createElement('script');
-    script.src = 'https://unpkg.com/live2d-widget@3.1.4/lib/L2Dwidget.min.js';
-    script.async = true;
-    script.onload = initLive2D;
-    document.body.appendChild(script);
-  })();
-</script>
-
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     var searchInput = document.getElementById('local-search-input');
@@ -965,6 +928,58 @@
       });
     });
   });
+</script>
+
+<style>
+  #live2dcanvas {
+    right: 96px !important;
+    bottom: 48px !important;
+    z-index: 98 !important;
+    pointer-events: auto;
+    background: radial-gradient(circle at 50% 58%, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0) 62%) !important;
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.42));
+  }
+
+  @media (max-width: 768px) {
+    #live2dcanvas {
+      display: none !important;
+    }
+  }
+</style>
+<script>
+  (function () {
+    if (window.__yinheLive2dLoaded) return;
+    window.__yinheLive2dLoaded = true;
+
+    function initLive2D() {
+      if (!window.L2Dwidget) return;
+      window.L2Dwidget.init({
+        model: {
+          jsonPath: 'https://unpkg.com/live2d-widget-model-hijiki@1.0.5/assets/hijiki.model.json'
+        },
+        display: {
+          position: 'right',
+          width: 160,
+          height: 220,
+          hOffset: 96,
+          vOffset: 48
+        },
+        mobile: {
+          show: false
+        },
+        react: {
+          opacityDefault: 0.88,
+          opacityOnHover: 1
+        }
+      });
+    }
+
+    var script = document.createElement('script');
+    script.src = 'https://unpkg.com/live2d-widget@3.1.4/lib/L2Dwidget.min.js';
+    script.async = true;
+    script.onload = initLive2D;
+    document.body.appendChild(script);
+  })();
 </script>
 <!-- hexo injector body_end end --></body>
 </html>
