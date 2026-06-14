@@ -197,87 +197,115 @@
     style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 0.8s;">
   </video>
 </div>
+<div id="bg-dbg" style="position:fixed;bottom:30px;right:20px;z-index:9999;font:13px/1.5 monospace;color:#fff;background:rgba(0,0,0,0.75);padding:6px 12px;border-radius:6px;pointer-events:none;">...</div>
 <script>
 (function() {
   var v = document.getElementById('bg-video');
+  var d = document.getElementById('bg-dbg');
   if (!v) return;
+
+  function log(msg) { if (d) d.textContent = msg; console.log('[bg]', msg); }
 
   v.muted = true;
   v.volume = 0;
   v.defaultMuted = true;
 
   var VIDEO_URL = '/video/bg.mp4';
-  var CACHE_NAME = 'yinhe-bg-v7';
+  var CACHE_NAME = 'yinhe-bg-v8';
   var started = false;
 
   function onStart() {
     if (started) return;
     started = true;
     v.style.opacity = '1';
+    log('OK');
+    setTimeout(function(){ if (d) d.remove(); }, 2000);
   }
 
-  // Set blob as video src and try to play
   function setSrcAndPlay(blob) {
+    log('blob ' + (blob.size/1024/1024).toFixed(1) + 'MB');
     var url = URL.createObjectURL(blob);
     v.src = url;
     v.load();
-    // Wait a tick for the video element to process the new src
     v.addEventListener('loadedmetadata', function() {
-      v.play().then(onStart).catch(function(e) {
-        // Muted autoplay blocked → wait for user click
+      log('meta ok');
+      v.play().then(function() {
+        log('play ok');
+        onStart();
+      }).catch(function(e) {
+        log('blocked: ' + (e ? e.name : '?'));
       });
     }, {once: true});
-    // Also try immediately if metadata loads synchronously
-    v.play().then(onStart).catch(function(){});
+    // Backup immediate play attempt
+    setTimeout(function() {
+      if (!started) {
+        log('retry');
+        v.play().then(onStart).catch(function(e) {
+          log('retry fail: ' + (e ? e.name : '?'));
+        });
+      }
+    }, 1000);
   }
 
-  // Get from cache first, else fetch
   function loadVideo() {
+    log('load');
+
     function fromCache() {
       if (!window.caches) return Promise.reject('no caches');
       return caches.open(CACHE_NAME).then(function(c) {
         return c.match(VIDEO_URL).then(function(r) {
-          if (!r) throw new Error('miss');
+          if (!r) throw new Error('cache miss');
+          log('cache hit');
           return r.blob();
         });
       });
     }
 
     function fetchAndCache() {
+      log('fetch ' + VIDEO_URL);
       return fetch(VIDEO_URL).then(function(r) {
+        log('HTTP ' + r.status + ' ' + (parseInt(r.headers.get('content-length'))/1024/1024).toFixed(1) + 'MB');
         if (!r.ok) throw new Error('HTTP ' + r.status);
         return r.blob();
       }).then(function(blob) {
-        // Store in cache for next visit
+        log('got blob');
         if (window.caches) {
           caches.open(CACHE_NAME).then(function(c) {
             c.put(VIDEO_URL, new Response(blob, {
               status: 200, headers: { 'Content-Type': 'video/mp4' }
             }));
+            log('cached');
           });
         }
         return blob;
+      }).catch(function(err) {
+        log('FETCH FAIL: ' + err);
+        throw err;
       });
     }
 
     fromCache().then(setSrcAndPlay).catch(function() {
+      log('cache miss, fetching');
       fetchAndCache().then(setSrcAndPlay).catch(function(err) {
-        // Video failed to load — stay on poster image (already visible)
+        log('FATAL: ' + err);
       });
     });
   }
 
-  // Click/touch fallback — trusted user gesture can start muted video
   function onUser(e) {
     if (started) return;
-    // Don't steal clicks on links
     if (e && e.target && (e.target.tagName === 'A' || e.target.closest('a'))) return;
-    v.play().then(onStart).catch(function(){});
+    log('click');
+    v.play().then(function() {
+      log('click ok');
+      onStart();
+    }).catch(function(e) {
+      log('click fail: ' + (e ? e.name : '?'));
+    });
   }
   document.addEventListener('click', onUser);
   document.addEventListener('touchstart', onUser);
 
-  // Start loading immediately
   loadVideo();
 })();
 </script>
@@ -821,6 +849,58 @@
 
   </div>
 <!-- hexo injector body_end start -->
+<style>
+  #live2dcanvas {
+    right: 96px !important;
+    bottom: 48px !important;
+    z-index: 98 !important;
+    pointer-events: auto;
+    background: radial-gradient(circle at 50% 58%, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0) 62%) !important;
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.42));
+  }
+
+  @media (max-width: 768px) {
+    #live2dcanvas {
+      display: none !important;
+    }
+  }
+</style>
+<script>
+  (function () {
+    if (window.__yinheLive2dLoaded) return;
+    window.__yinheLive2dLoaded = true;
+
+    function initLive2D() {
+      if (!window.L2Dwidget) return;
+      window.L2Dwidget.init({
+        model: {
+          jsonPath: 'https://unpkg.com/live2d-widget-model-hijiki@1.0.5/assets/hijiki.model.json'
+        },
+        display: {
+          position: 'right',
+          width: 160,
+          height: 220,
+          hOffset: 96,
+          vOffset: 48
+        },
+        mobile: {
+          show: false
+        },
+        react: {
+          opacityDefault: 0.88,
+          opacityOnHover: 1
+        }
+      });
+    }
+
+    var script = document.createElement('script');
+    script.src = 'https://unpkg.com/live2d-widget@3.1.4/lib/L2Dwidget.min.js';
+    script.async = true;
+    script.onload = initLive2D;
+    document.body.appendChild(script);
+  })();
+</script>
+
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     var searchInput = document.getElementById('local-search-input');
@@ -891,58 +971,6 @@
       });
     });
   });
-</script>
-
-<style>
-  #live2dcanvas {
-    right: 96px !important;
-    bottom: 48px !important;
-    z-index: 98 !important;
-    pointer-events: auto;
-    background: radial-gradient(circle at 50% 58%, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0) 62%) !important;
-    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.42));
-  }
-
-  @media (max-width: 768px) {
-    #live2dcanvas {
-      display: none !important;
-    }
-  }
-</style>
-<script>
-  (function () {
-    if (window.__yinheLive2dLoaded) return;
-    window.__yinheLive2dLoaded = true;
-
-    function initLive2D() {
-      if (!window.L2Dwidget) return;
-      window.L2Dwidget.init({
-        model: {
-          jsonPath: 'https://unpkg.com/live2d-widget-model-hijiki@1.0.5/assets/hijiki.model.json'
-        },
-        display: {
-          position: 'right',
-          width: 160,
-          height: 220,
-          hOffset: 96,
-          vOffset: 48
-        },
-        mobile: {
-          show: false
-        },
-        react: {
-          opacityDefault: 0.88,
-          opacityOnHover: 1
-        }
-      });
-    }
-
-    var script = document.createElement('script');
-    script.src = 'https://unpkg.com/live2d-widget@3.1.4/lib/L2Dwidget.min.js';
-    script.async = true;
-    script.onload = initLive2D;
-    document.body.appendChild(script);
-  })();
 </script>
 <!-- hexo injector body_end end --></body>
 </html>
