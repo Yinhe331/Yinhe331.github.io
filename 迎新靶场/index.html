@@ -193,27 +193,18 @@
 <!-- hexo injector head_end end --><meta name="generator" content="Hexo 8.1.1"></head>
 <body><!-- hexo injector body_begin start -->
 <div id="bg-video-wrap" style="position:fixed;inset:0;z-index:0;overflow:hidden;background:#111 url('/img/bg-video-poster.jpg') center/cover no-repeat;pointer-events:none;">
-  <video id="bg-video" loop muted playsinline preload="auto" poster="/img/bg-video-poster.jpg"
+  <video id="bg-video" loop muted playsinline poster="/img/bg-video-poster.jpg"
     style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 0.8s;">
   </video>
 </div>
-<div id="bg-video-loader" style="position:fixed;bottom:30px;left:50%;transform:translateX(-50%);z-index:999;pointer-events:none;font-family:sans-serif;transition:opacity 0.6s;">
-  <div style="display:flex;align-items:center;gap:8px;background:rgba(0,0,0,0.55);padding:6px 16px;border-radius:16px;">
-    <div id="bg-video-loader-dot" style="width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.7);animation:yinhe-pulse 1.2s infinite;"></div>
-    <span id="bg-video-loader-text" style="font-size:12px;color:rgba(255,255,255,0.8);">加载背景视频...</span>
-  </div>
+<div id="bg-video-status" style="position:fixed;bottom:30px;left:50%;transform:translateX(-50%);z-index:999;font-family:sans-serif;transition:opacity 0.6s;">
+  <span id="bg-video-status-text" style="display:inline-block;background:rgba(0,0,0,0.5);color:rgba(255,255,255,0.8);padding:6px 16px;border-radius:16px;font-size:12px;pointer-events:auto;cursor:default;">加载中...</span>
 </div>
-<style>
-  @keyframes yinhe-pulse {
-    0%,100% { opacity:0.35; transform:scale(0.9); }
-    50% { opacity:1; transform:scale(1.15); }
-  }
-</style>
 <script>
 (function() {
   var v = document.getElementById('bg-video');
-  var loader = document.getElementById('bg-video-loader');
-  var loaderText = document.getElementById('bg-video-loader-text');
+  var statusEl = document.getElementById('bg-video-status');
+  var statusText = document.getElementById('bg-video-status-text');
   if (!v) return;
 
   v.muted = true;
@@ -224,112 +215,68 @@
   v.playsInline = true;
 
   var VIDEO_URL = '/video/bg.mp4';
-  var CACHE_NAME = 'yinhe-bg-video-v1';
+  var CACHE_NAME = 'yinhe-bg-v1';
   var started = false;
-  var loaderHidden = false;
+  var blobReady = false;
 
-  function hideLoader() {
-    if (loaderHidden) return;
-    loaderHidden = true;
-    if (loader) loader.style.opacity = '0';
-    setTimeout(function() { if (loader) loader.remove(); }, 700);
+  function hideStatus() {
+    if (statusEl) { statusEl.style.opacity = '0'; }
+    setTimeout(function() { if (statusEl) statusEl.remove(); }, 700);
   }
 
   function onStart() {
     if (started) return;
     started = true;
     v.style.opacity = '1';
-    hideLoader();
+    hideStatus();
   }
 
   function tryPlay() {
-    if (started) return;
-    var promise = v.play();
-    if (promise && promise.then) {
-      promise.then(onStart).catch(function(e) {
-        // Autoplay blocked — will retry on user gesture or next event
-      });
-    }
+    if (started || !blobReady) return;
+    var p = v.play();
+    if (p && p.then) { p.then(onStart).catch(function(){}); }
   }
 
   v.addEventListener('loadedmetadata', tryPlay);
-  v.addEventListener('loadeddata', tryPlay);
   v.addEventListener('canplay', tryPlay);
   v.addEventListener('canplaythrough', tryPlay);
   v.addEventListener('playing', onStart);
 
-  // Fallback: if video doesn't start within 8 seconds of setting src, try again
-  var fallbackTimer = null;
-  function resetFallback() {
-    clearTimeout(fallbackTimer);
-    fallbackTimer = setTimeout(function() {
-      if (!started) { v.load(); tryPlay(); }
-    }, 8000);
-  }
-
-  // Set blob URL as video source and attempt playback
-  function setVideoBlob(blob) {
+  // Use blob URL & start playback
+  function setBlob(blob) {
     var url = URL.createObjectURL(blob);
     v.src = url;
+    blobReady = true;
     v.load();
-    resetFallback();
     tryPlay();
+    // Retry if not started
+    setTimeout(function() { if (!started) { v.load(); tryPlay(); } }, 3000);
+    setTimeout(function() { if (!started) { v.load(); tryPlay(); } }, 8000);
   }
 
-  // Try to get video from Cache API first
-  function loadFromCache() {
-    if (!window.caches) return Promise.reject('no cache api');
-    return caches.open(CACHE_NAME).then(function(cache) {
-      return cache.match(VIDEO_URL).then(function(response) {
-        if (!response) throw new Error('not in cache');
-        return response.blob();
+  // Cache API: load from cache
+  function fromCache() {
+    if (!window.caches) return Promise.reject('no-cache-api');
+    return caches.open(CACHE_NAME).then(function(c) {
+      return c.match(VIDEO_URL).then(function(r) {
+        if (!r) throw new Error('miss');
+        return r.blob();
       });
     });
   }
 
-  // Download video and store in Cache API
-  function downloadAndCache() {
-    if (loaderText) loaderText.textContent = '下载背景视频...';
-    return fetch(VIDEO_URL, { cache: 'reload' }).then(function(response) {
-      if (!response.ok) throw new Error('HTTP ' + response.status);
-      var contentLength = response.headers.get('content-length');
-      var total = contentLength ? parseInt(contentLength, 10) : 0;
-      var loaded = 0;
-
-      // Stream with progress if supported
-      if (response.body && window.ReadableStream && total > 0) {
-        var reader = response.body.getReader();
-        var chunks = [];
-        function pump() {
-          return reader.read().then(function(result) {
-            if (result.done) {
-              var blob = new Blob(chunks, { type: 'video/mp4' });
-              return blob;
-            }
-            chunks.push(result.value);
-            loaded += result.value.length;
-            if (loaderText && total > 0) {
-              var pct = Math.round(loaded / total * 100);
-              loaderText.textContent = '下载中 ' + pct + '%';
-            }
-            return pump();
-          });
-        }
-        return pump();
-      }
-
-      // Fallback: no streaming support
-      return response.blob().then(function(blob) {
-        if (loaderText) loaderText.textContent = '处理视频...';
-        return blob;
-      });
+  // Fetch and cache
+  function download() {
+    return fetch(VIDEO_URL).then(function(r) {
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.blob();
     }).then(function(blob) {
-      // Store in Cache API for next visit
+      // Store in Cache API
       if (window.caches) {
-        caches.open(CACHE_NAME).then(function(cache) {
-          cache.put(VIDEO_URL, new Response(blob, {
+        caches.open(CACHE_NAME).then(function(c) {
+          c.put(VIDEO_URL, new Response(blob, {
             status: 200,
-            headers: { 'Content-Type': 'video/mp4', 'Content-Length': String(blob.size) }
+            headers: { 'Content-Type': 'video/mp4' }
           }));
         });
       }
@@ -337,36 +284,46 @@
     });
   }
 
-  // Main flow
-  function init() {
-    // Try cache first (instant load for return visitors)
-    loadFromCache().then(function(blob) {
-      if (loaderText) loaderText.textContent = '加载缓存...';
-      setVideoBlob(blob);
-    }).catch(function() {
-      // Not in cache — download
-      downloadAndCache().then(function(blob) {
-        setVideoBlob(blob);
-      }).catch(function(err) {
-        if (loaderText) loaderText.textContent = '视频加载失败';
-      });
-    });
+  // Click fallback: try direct playback if blob hasn't loaded
+  var clickHintShown = false;
+  function showClickHint() {
+    if (clickHintShown || started || blobReady) return;
+    clickHintShown = true;
+    if (statusText) {
+      statusText.textContent = '点击任意位置启用背景';
+      statusText.style.cursor = 'pointer';
+    }
   }
 
-  // User gesture retry (in case autoplay was blocked)
   function onUser(e) {
     if (started) return;
-    // Don't intercept clicks on links
     if (e && e.target && (e.target.tagName === 'A' || e.target.closest('a'))) return;
+    if (blobReady) { tryPlay(); return; }
+    // Blob not ready, try direct src as last resort
+    v.src = VIDEO_URL;
     v.load();
-    tryPlay();
-    setTimeout(tryPlay, 200);
+    setTimeout(function() { v.play().then(onStart).catch(function(){}); }, 300);
+    setTimeout(function() { v.play().then(onStart).catch(function(){}); }, 1500);
   }
   document.addEventListener('click', onUser);
   document.addEventListener('touchstart', onUser);
 
-  // Start
-  init();
+  // Main
+  fromCache().then(function(blob) {
+    // Cached! Instant.
+    if (statusText) statusText.textContent = '';
+    setBlob(blob);
+  }).catch(function() {
+    // Not cached. Download.
+    download().then(function(blob) {
+      setBlob(blob);
+    }).catch(function() {
+      if (statusText) statusText.textContent = '视频加载失败';
+    });
+  });
+
+  // Show click hint if download takes too long
+  setTimeout(showClickHint, 5000);
 })();
 </script>
 <!-- hexo injector body_begin end -->
