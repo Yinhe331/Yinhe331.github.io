@@ -201,13 +201,18 @@
 <!-- hexo injector head_end end --><meta name="generator" content="Hexo 8.1.1"></head>
 <body><!-- hexo injector body_begin start -->
 <div id="bg-video-wrap" style="position:fixed;inset:0;z-index:0;overflow:hidden;background:#111 url('/img/bg-video-poster.jpg') center/cover no-repeat;pointer-events:none;">
-  <video id="bg-video" loop muted playsinline poster="/img/bg-video-poster.jpg"
-    style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1.2s ease;">
+  <video id="bg-video" loop muted playsinline preload="metadata" poster="/img/bg-video-poster.jpg"
+    style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;"
+    src="/video/bg.mp4">
   </video>
+</div>
+<div id="bg-video-start-hint" style="position:fixed;bottom:30px;left:50%;transform:translateX(-50%);z-index:999;background:rgba(0,0,0,0.65);color:rgba(255,255,255,0.85);padding:8px 20px;border-radius:20px;font-size:13px;cursor:pointer;pointer-events:auto;transition:opacity 0.6s;font-family:sans-serif;">
+  ▶ 点击启用动态背景
 </div>
 <script>
 (function() {
   var v = document.getElementById('bg-video');
+  var hint = document.getElementById('bg-video-start-hint');
   if (!v) return;
 
   v.muted = true;
@@ -218,20 +223,23 @@
   v.playsInline = true;
 
   var started = false;
-  var blobUrl = null;
+  var storageKey = 'yinhe-blog-video-started';
 
   function onStart() {
     if (started) return;
     started = true;
-    v.style.opacity = '1';
+    try { localStorage.setItem(storageKey, '1'); } catch(e) {}
+    if (hint) hint.style.opacity = '0';
+    setTimeout(function() { if (hint) hint.remove(); }, 700);
   }
 
   function tryPlay() {
     if (started) return;
-    if (!v.src || v.src === window.location.href || v.src === '') return;
     var promise = v.play();
     if (promise && promise.then) {
-      promise.then(onStart).catch(function(){});
+      promise.then(function() {
+        onStart();
+      }).catch(function(){});
     }
   }
 
@@ -240,73 +248,54 @@
   v.addEventListener('canplay', tryPlay);
   v.addEventListener('canplaythrough', tryPlay);
   v.addEventListener('playing', onStart);
-  v.addEventListener('pause', function() {
-    if (!started) setTimeout(tryPlay, 300);
-  });
 
-  // Fetch video as Blob → create blob: URL → set as src
-  // fetch() uses browser HTTP cache, so subsequent visits are instant
-  function loadViaBlob() {
-    var startTime = Date.now();
-    fetch('/video/bg.mp4')
-      .then(function(res) {
-        if (!res.ok) throw new Error('HTTP ' + res.status);
-        return res.blob();
-      })
-      .then(function(blob) {
-        var elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
-        console.log('[bg-video] blob ready: ' + (blob.size / 1024 / 1024).toFixed(1) + 'MB in ' + elapsed + 's');
-        blobUrl = URL.createObjectURL(blob);
-        v.src = blobUrl;
-        v.load();
-        // load() triggers loadedmetadata → tryPlay → onStart
-      })
-      .catch(function(err) {
-        console.log('[bg-video] blob fetch failed:', err.message);
-        // Retry once after 3 seconds
-        setTimeout(function() {
-          console.log('[bg-video] retrying blob fetch...');
-          fetch('/video/bg.mp4')
-            .then(function(res) { return res.blob(); })
-            .then(function(blob) {
-              blobUrl = URL.createObjectURL(blob);
-              v.src = blobUrl;
-              v.load();
-            })
-            .catch(function() {
-              // Last resort: direct src (may not work due to Range-request bug)
-              console.log('[bg-video] blob retry failed, using direct src');
-              v.src = '/video/bg.mp4';
-              v.load();
-            });
-        }, 3000);
-      });
+  // Try muted autoplay immediately (Chrome allows this)
+  var autoTried = false;
+  function autoPlay() {
+    if (autoTried || started) return;
+    autoTried = true;
+    // Force load and play
+    v.load();
+    setTimeout(tryPlay, 200);
+    setTimeout(tryPlay, 800);
+    setTimeout(tryPlay, 2000);
   }
 
-  // Start blob fetch immediately
-  loadViaBlob();
+  // Check if video already started in previous visit
+  var wasStarted = false;
+  try { wasStarted = localStorage.getItem(storageKey) === '1'; } catch(e) {}
 
-  // User interaction (click/touch/keypress): try to start playback
-  // If blob is loaded, play(). If not, wait for blob to finish.
-  function onUser() {
+  if (wasStarted) {
+    // Previously started - try aggressive autoplay
+    autoPlay();
+    // Hide hint faster
+    if (hint) hint.style.opacity = '0.5';
+  } else {
+    // First visit - also try autoplay, but show hint
+    autoPlay();
+  }
+
+  // User interaction: start playback (works because of user gesture)
+  function onUser(e) {
     if (started) return;
-    // Try play() on whatever source is currently set
-    if (v.src && v.src !== '' && v.src !== window.location.href) {
-      tryPlay();
-    }
-    // Don't fall back to broken direct URL - wait for blob
-    document.removeEventListener('click', onUser);
-    document.removeEventListener('touchstart', onUser);
-    document.removeEventListener('keydown', onUser);
+    // Ignore if clicking on links
+    if (e && e.target && (e.target.tagName === 'A' || e.target.closest('a'))) return;
+    v.load(); // Force fresh load in user gesture context
+    tryPlay();
+    // Retry a few times in the gesture context
+    setTimeout(tryPlay, 150);
+    setTimeout(tryPlay, 500);
   }
   document.addEventListener('click', onUser);
   document.addEventListener('touchstart', onUser);
   document.addEventListener('keydown', onUser, { once: true });
 
-  // Cleanup on page unload
-  window.addEventListener('beforeunload', function() {
-    if (blobUrl) URL.revokeObjectURL(blobUrl);
-  });
+  // Also try on scroll/wheel (these count as user interaction)
+  function onScroll() {
+    if (started) tryPlay();
+    window.removeEventListener('scroll', onScroll);
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
 })();
 </script>
 <!-- hexo injector body_begin end -->
