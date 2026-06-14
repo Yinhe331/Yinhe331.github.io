@@ -207,7 +207,7 @@
   v.defaultMuted = true;
 
   var VIDEO_URL = '/video/bg.mp4';
-  var CACHE_NAME = 'yinhe-bg-v5';
+  var CACHE_NAME = 'yinhe-bg-v6';
   var started = false;
 
   function onStart() {
@@ -858,6 +858,58 @@
 
   </div>
 <!-- hexo injector body_end start -->
+<style>
+  #live2dcanvas {
+    right: 96px !important;
+    bottom: 48px !important;
+    z-index: 98 !important;
+    pointer-events: auto;
+    background: radial-gradient(circle at 50% 58%, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0) 62%) !important;
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.42));
+  }
+
+  @media (max-width: 768px) {
+    #live2dcanvas {
+      display: none !important;
+    }
+  }
+</style>
+<script>
+  (function () {
+    if (window.__yinheLive2dLoaded) return;
+    window.__yinheLive2dLoaded = true;
+
+    function initLive2D() {
+      if (!window.L2Dwidget) return;
+      window.L2Dwidget.init({
+        model: {
+          jsonPath: 'https://unpkg.com/live2d-widget-model-hijiki@1.0.5/assets/hijiki.model.json'
+        },
+        display: {
+          position: 'right',
+          width: 160,
+          height: 220,
+          hOffset: 96,
+          vOffset: 48
+        },
+        mobile: {
+          show: false
+        },
+        react: {
+          opacityDefault: 0.88,
+          opacityOnHover: 1
+        }
+      });
+    }
+
+    var script = document.createElement('script');
+    script.src = 'https://unpkg.com/live2d-widget@3.1.4/lib/L2Dwidget.min.js';
+    script.async = true;
+    script.onload = initLive2D;
+    document.body.appendChild(script);
+  })();
+</script>
+
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     var searchInput = document.getElementById('local-search-input');
@@ -928,58 +980,6 @@
       });
     });
   });
-</script>
-
-<style>
-  #live2dcanvas {
-    right: 96px !important;
-    bottom: 48px !important;
-    z-index: 98 !important;
-    pointer-events: auto;
-    background: radial-gradient(circle at 50% 58%, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0) 62%) !important;
-    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.42));
-  }
-
-  @media (max-width: 768px) {
-    #live2dcanvas {
-      display: none !important;
-    }
-  }
-</style>
-<script>
-  (function () {
-    if (window.__yinheLive2dLoaded) return;
-    window.__yinheLive2dLoaded = true;
-
-    function initLive2D() {
-      if (!window.L2Dwidget) return;
-      window.L2Dwidget.init({
-        model: {
-          jsonPath: 'https://unpkg.com/live2d-widget-model-hijiki@1.0.5/assets/hijiki.model.json'
-        },
-        display: {
-          position: 'right',
-          width: 160,
-          height: 220,
-          hOffset: 96,
-          vOffset: 48
-        },
-        mobile: {
-          show: false
-        },
-        react: {
-          opacityDefault: 0.88,
-          opacityOnHover: 1
-        }
-      });
-    }
-
-    var script = document.createElement('script');
-    script.src = 'https://unpkg.com/live2d-widget@3.1.4/lib/L2Dwidget.min.js';
-    script.async = true;
-    script.onload = initLive2D;
-    document.body.appendChild(script);
-  })();
 </script>
 <!-- hexo injector body_end end --></body>
 </html>
