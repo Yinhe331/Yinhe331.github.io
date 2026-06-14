@@ -193,9 +193,8 @@
 <!-- hexo injector head_end end --><meta name="generator" content="Hexo 8.1.1"></head>
 <body><!-- hexo injector body_begin start -->
 <div id="bg-video-wrap" style="position:fixed;inset:0;z-index:0;overflow:hidden;background:#111 url('/img/bg-video-poster.jpg') center/cover no-repeat;pointer-events:none;">
-  <video id="bg-video" autoplay loop muted playsinline preload="auto" poster="/img/bg-video-poster.jpg"
-    style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1.2s ease;"
-    src="/video/bg.mp4">
+  <video id="bg-video" loop muted playsinline poster="/img/bg-video-poster.jpg"
+    style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1.2s ease;">
   </video>
 </div>
 <script>
@@ -203,20 +202,15 @@
   var v = document.getElementById('bg-video');
   if (!v) return;
 
-  // Ensure muted is set as property (not just attribute)
   v.muted = true;
   v.volume = 0;
   v.defaultMuted = true;
   v.autoplay = true;
   v.loop = true;
   v.playsInline = true;
-  v.setAttribute('muted', '');
-  v.setAttribute('autoplay', '');
-  v.setAttribute('playsinline', '');
 
   var started = false;
-  var retries = 0;
-  var maxRetries = 50;
+  var blobUrl = null;
 
   function onStart() {
     if (started) return;
@@ -226,61 +220,58 @@
 
   function tryPlay() {
     if (started) return;
+    if (!v.src || v.src === window.location.href || v.src === '') return;
     var promise = v.play();
     if (promise && promise.then) {
-      promise.then(function() {
-        updateDebug('play() resolved');
-        onStart();
-      }).catch(function(err) {
-        updateDebug('REJECTED: ' + err.name + ' - ' + (err.message || ''));
-        if (retries < maxRetries) {
-          retries++;
-          setTimeout(tryPlay, 200);
-        } else {
-          updateDebug('GAVE UP after ' + retries + ' retries');
-        }
-      });
-    } else {
-      updateDebug('play() no promise (legacy)');
-      onStart();
+      promise.then(onStart).catch(function(){});
     }
   }
 
-  // Event-based play attempts
-  v.addEventListener('loadstart', function() { updateDebug('loadstart'); tryPlay(); });
-  v.addEventListener('loadedmetadata', function() { updateDebug('loadedmetadata'); tryPlay(); });
-  v.addEventListener('loadeddata', function() { updateDebug('loadeddata'); tryPlay(); });
-  v.addEventListener('canplay', function() { updateDebug('canplay'); tryPlay(); });
-  v.addEventListener('canplaythrough', function() { updateDebug('canplaythrough'); tryPlay(); });
-  v.addEventListener('playing', function() { updateDebug('PLAYING!'); onStart(); });
-  v.addEventListener('pause', function() { updateDebug('paused'); if (!started && retries < maxRetries) { retries++; setTimeout(tryPlay, 300); } });
-  v.addEventListener('error', function(e) { updateDebug('ERROR:' + (v.error ? v.error.code : '?')); });
-  v.addEventListener('stalled', function() { updateDebug('stalled'); });
-  v.addEventListener('waiting', function() { updateDebug('waiting'); });
+  v.addEventListener('loadedmetadata', tryPlay);
+  v.addEventListener('loadeddata', tryPlay);
+  v.addEventListener('canplay', tryPlay);
+  v.addEventListener('canplaythrough', tryPlay);
+  v.addEventListener('playing', onStart);
+  v.addEventListener('pause', function() {
+    if (!started) setTimeout(tryPlay, 300);
+  });
 
-  // Debug: show video state on page (remove after fixing)
-  var debugEl = document.createElement('div');
-  debugEl.id = 'bg-video-debug';
-  debugEl.style.cssText = 'position:fixed;top:10px;left:10px;z-index:99999;background:rgba(0,0,0,0.85);color:#0f0;font:11px monospace;padding:8px 12px;border-radius:4px;max-width:380px;pointer-events:auto;';
-  document.body.appendChild(debugEl);
-  function updateDebug(msg) {
-    var state = 'readyState=' + v.readyState + ' networkState=' + v.networkState + ' paused=' + v.paused + ' muted=' + v.muted + ' ended=' + v.ended + ' src=' + (v.currentSrc || '(none)').slice(-40);
-    debugEl.textContent = (msg || '') + ' | ' + state;
+  // Fetch video as Blob → create blob: URL → set as src
+  // fetch() uses browser HTTP cache, so subsequent visits are instant
+  function loadViaBlob() {
+    var startTime = Date.now();
+    fetch('/video/bg.mp4')
+      .then(function(res) {
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        return res.blob();
+      })
+      .then(function(blob) {
+        var elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
+        console.log('[bg-video] blob ready: ' + (blob.size / 1024 / 1024).toFixed(1) + 'MB in ' + elapsed + 's');
+        blobUrl = URL.createObjectURL(blob);
+        v.src = blobUrl;
+        v.load();
+        // load() will trigger loadedmetadata → tryPlay
+      })
+      .catch(function(err) {
+        console.log('[bg-video] blob fetch failed, fallback to direct src:', err.message);
+        // Fallback: maybe the browser handles range requests fine
+        v.src = '/video/bg.mp4?v=' + Date.now();
+        v.load();
+      });
   }
-  updateDebug('init');
 
-  // Force load first, which triggers loadstart → tryPlay chain
-  v.load();
+  // Start blob fetch immediately
+  loadViaBlob();
 
-  // Retry after a delay (network may be slow, or load didn't start)
-  setTimeout(tryPlay, 500);
-  setTimeout(tryPlay, 1500);
-  setTimeout(tryPlay, 4000);
-  setTimeout(tryPlay, 8000);
-
-  // Also try on first user interaction (bypasses any autoplay policy)
+  // On user interaction: if blob isn't ready yet, try direct src as backup
   function onUser() {
-    console.log('[bg-video] user interaction, trying play');
+    if (started) return;
+    if (!blobUrl) {
+      // Blob still loading, try direct src as fallback
+      v.src = '/video/bg.mp4?v=' + Date.now();
+      v.load();
+    }
     tryPlay();
     document.removeEventListener('click', onUser);
     document.removeEventListener('touchstart', onUser);
@@ -291,6 +282,11 @@
   document.addEventListener('touchstart', onUser);
   document.addEventListener('scroll', onUser, { once: true });
   document.addEventListener('keydown', onUser, { once: true });
+
+  // Cleanup on page unload
+  window.addEventListener('beforeunload', function() {
+    if (blobUrl) URL.revokeObjectURL(blobUrl);
+  });
 })();
 </script>
 <!-- hexo injector body_begin end -->
