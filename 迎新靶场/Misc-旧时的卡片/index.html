@@ -259,36 +259,48 @@
         blobUrl = URL.createObjectURL(blob);
         v.src = blobUrl;
         v.load();
-        // load() will trigger loadedmetadata → tryPlay
+        // load() triggers loadedmetadata → tryPlay → onStart
       })
       .catch(function(err) {
-        console.log('[bg-video] blob fetch failed, fallback to direct src:', err.message);
-        // Fallback: maybe the browser handles range requests fine
-        v.src = '/video/bg.mp4?v=' + Date.now();
-        v.load();
+        console.log('[bg-video] blob fetch failed:', err.message);
+        // Retry once after 3 seconds
+        setTimeout(function() {
+          console.log('[bg-video] retrying blob fetch...');
+          fetch('/video/bg.mp4')
+            .then(function(res) { return res.blob(); })
+            .then(function(blob) {
+              blobUrl = URL.createObjectURL(blob);
+              v.src = blobUrl;
+              v.load();
+            })
+            .catch(function() {
+              // Last resort: direct src (may not work due to Range-request bug)
+              console.log('[bg-video] blob retry failed, using direct src');
+              v.src = '/video/bg.mp4';
+              v.load();
+            });
+        }, 3000);
       });
   }
 
   // Start blob fetch immediately
   loadViaBlob();
 
-  // On user interaction: if blob isn't ready yet, try direct src as backup
+  // User interaction (click/touch/keypress): try to start playback
+  // If blob is loaded, play(). If not, wait for blob to finish.
   function onUser() {
     if (started) return;
-    if (!blobUrl) {
-      // Blob still loading, try direct src as fallback
-      v.src = '/video/bg.mp4?v=' + Date.now();
-      v.load();
+    // Try play() on whatever source is currently set
+    if (v.src && v.src !== '' && v.src !== window.location.href) {
+      tryPlay();
     }
-    tryPlay();
+    // Don't fall back to broken direct URL - wait for blob
     document.removeEventListener('click', onUser);
     document.removeEventListener('touchstart', onUser);
-    document.removeEventListener('scroll', onUser);
     document.removeEventListener('keydown', onUser);
   }
   document.addEventListener('click', onUser);
   document.addEventListener('touchstart', onUser);
-  document.addEventListener('scroll', onUser, { once: true });
   document.addEventListener('keydown', onUser, { once: true });
 
   // Cleanup on page unload
@@ -874,58 +886,6 @@
 
   </div>
 <!-- hexo injector body_end start -->
-<style>
-  #live2dcanvas {
-    right: 96px !important;
-    bottom: 48px !important;
-    z-index: 98 !important;
-    pointer-events: auto;
-    background: radial-gradient(circle at 50% 58%, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0) 62%) !important;
-    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.42));
-  }
-
-  @media (max-width: 768px) {
-    #live2dcanvas {
-      display: none !important;
-    }
-  }
-</style>
-<script>
-  (function () {
-    if (window.__yinheLive2dLoaded) return;
-    window.__yinheLive2dLoaded = true;
-
-    function initLive2D() {
-      if (!window.L2Dwidget) return;
-      window.L2Dwidget.init({
-        model: {
-          jsonPath: 'https://unpkg.com/live2d-widget-model-hijiki@1.0.5/assets/hijiki.model.json'
-        },
-        display: {
-          position: 'right',
-          width: 160,
-          height: 220,
-          hOffset: 96,
-          vOffset: 48
-        },
-        mobile: {
-          show: false
-        },
-        react: {
-          opacityDefault: 0.88,
-          opacityOnHover: 1
-        }
-      });
-    }
-
-    var script = document.createElement('script');
-    script.src = 'https://unpkg.com/live2d-widget@3.1.4/lib/L2Dwidget.min.js';
-    script.async = true;
-    script.onload = initLive2D;
-    document.body.appendChild(script);
-  })();
-</script>
-
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     var searchInput = document.getElementById('local-search-input');
@@ -996,6 +956,58 @@
       });
     });
   });
+</script>
+
+<style>
+  #live2dcanvas {
+    right: 96px !important;
+    bottom: 48px !important;
+    z-index: 98 !important;
+    pointer-events: auto;
+    background: radial-gradient(circle at 50% 58%, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0) 62%) !important;
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.42));
+  }
+
+  @media (max-width: 768px) {
+    #live2dcanvas {
+      display: none !important;
+    }
+  }
+</style>
+<script>
+  (function () {
+    if (window.__yinheLive2dLoaded) return;
+    window.__yinheLive2dLoaded = true;
+
+    function initLive2D() {
+      if (!window.L2Dwidget) return;
+      window.L2Dwidget.init({
+        model: {
+          jsonPath: 'https://unpkg.com/live2d-widget-model-hijiki@1.0.5/assets/hijiki.model.json'
+        },
+        display: {
+          position: 'right',
+          width: 160,
+          height: 220,
+          hOffset: 96,
+          vOffset: 48
+        },
+        mobile: {
+          show: false
+        },
+        react: {
+          opacityDefault: 0.88,
+          opacityOnHover: 1
+        }
+      });
+    }
+
+    var script = document.createElement('script');
+    script.src = 'https://unpkg.com/live2d-widget@3.1.4/lib/L2Dwidget.min.js';
+    script.async = true;
+    script.onload = initLive2D;
+    document.body.appendChild(script);
+  })();
 </script>
 <!-- hexo injector body_end end --></body>
 </html>
