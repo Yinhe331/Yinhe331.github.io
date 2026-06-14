@@ -230,28 +230,45 @@
     var promise = v.play();
     if (promise && promise.then) {
       promise.then(function() {
+        updateDebug('play() resolved');
         onStart();
       }).catch(function(err) {
-        console.log('[bg-video] play rejected:', err.name, err.message);
+        updateDebug('REJECTED: ' + err.name + ' - ' + (err.message || ''));
         if (retries < maxRetries) {
           retries++;
           setTimeout(tryPlay, 200);
+        } else {
+          updateDebug('GAVE UP after ' + retries + ' retries');
         }
       });
+    } else {
+      updateDebug('play() no promise (legacy)');
+      onStart();
     }
   }
 
   // Event-based play attempts
-  v.addEventListener('loadstart', function() { console.log('[bg-video] loadstart'); tryPlay(); });
-  v.addEventListener('loadedmetadata', function() { console.log('[bg-video] loadedmetadata'); tryPlay(); });
-  v.addEventListener('loadeddata', function() { console.log('[bg-video] loadeddata'); tryPlay(); });
-  v.addEventListener('canplay', function() { console.log('[bg-video] canplay'); tryPlay(); });
-  v.addEventListener('canplaythrough', function() { console.log('[bg-video] canplaythrough'); tryPlay(); });
-  v.addEventListener('playing', function() { console.log('[bg-video] playing!'); onStart(); });
-  v.addEventListener('pause', function() { console.log('[bg-video] paused'); if (!started && retries < maxRetries) { retries++; setTimeout(tryPlay, 300); } });
-  v.addEventListener('error', function(e) { console.log('[bg-video] error:', e); });
-  v.addEventListener('stalled', function() { console.log('[bg-video] stalled'); });
-  v.addEventListener('waiting', function() { console.log('[bg-video] waiting'); });
+  v.addEventListener('loadstart', function() { updateDebug('loadstart'); tryPlay(); });
+  v.addEventListener('loadedmetadata', function() { updateDebug('loadedmetadata'); tryPlay(); });
+  v.addEventListener('loadeddata', function() { updateDebug('loadeddata'); tryPlay(); });
+  v.addEventListener('canplay', function() { updateDebug('canplay'); tryPlay(); });
+  v.addEventListener('canplaythrough', function() { updateDebug('canplaythrough'); tryPlay(); });
+  v.addEventListener('playing', function() { updateDebug('PLAYING!'); onStart(); });
+  v.addEventListener('pause', function() { updateDebug('paused'); if (!started && retries < maxRetries) { retries++; setTimeout(tryPlay, 300); } });
+  v.addEventListener('error', function(e) { updateDebug('ERROR:' + (v.error ? v.error.code : '?')); });
+  v.addEventListener('stalled', function() { updateDebug('stalled'); });
+  v.addEventListener('waiting', function() { updateDebug('waiting'); });
+
+  // Debug: show video state on page (remove after fixing)
+  var debugEl = document.createElement('div');
+  debugEl.id = 'bg-video-debug';
+  debugEl.style.cssText = 'position:fixed;top:10px;left:10px;z-index:99999;background:rgba(0,0,0,0.85);color:#0f0;font:11px monospace;padding:8px 12px;border-radius:4px;max-width:380px;pointer-events:auto;';
+  document.body.appendChild(debugEl);
+  function updateDebug(msg) {
+    var state = 'readyState=' + v.readyState + ' networkState=' + v.networkState + ' paused=' + v.paused + ' muted=' + v.muted + ' ended=' + v.ended + ' src=' + (v.currentSrc || '(none)').slice(-40);
+    debugEl.textContent = (msg || '') + ' | ' + state;
+  }
+  updateDebug('init');
 
   // Force load first, which triggers loadstart → tryPlay chain
   v.load();
@@ -705,6 +722,58 @@
 
   </div>
 <!-- hexo injector body_end start -->
+<style>
+  #live2dcanvas {
+    right: 96px !important;
+    bottom: 48px !important;
+    z-index: 98 !important;
+    pointer-events: auto;
+    background: radial-gradient(circle at 50% 58%, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0) 62%) !important;
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.42));
+  }
+
+  @media (max-width: 768px) {
+    #live2dcanvas {
+      display: none !important;
+    }
+  }
+</style>
+<script>
+  (function () {
+    if (window.__yinheLive2dLoaded) return;
+    window.__yinheLive2dLoaded = true;
+
+    function initLive2D() {
+      if (!window.L2Dwidget) return;
+      window.L2Dwidget.init({
+        model: {
+          jsonPath: 'https://unpkg.com/live2d-widget-model-hijiki@1.0.5/assets/hijiki.model.json'
+        },
+        display: {
+          position: 'right',
+          width: 160,
+          height: 220,
+          hOffset: 96,
+          vOffset: 48
+        },
+        mobile: {
+          show: false
+        },
+        react: {
+          opacityDefault: 0.88,
+          opacityOnHover: 1
+        }
+      });
+    }
+
+    var script = document.createElement('script');
+    script.src = 'https://unpkg.com/live2d-widget@3.1.4/lib/L2Dwidget.min.js';
+    script.async = true;
+    script.onload = initLive2D;
+    document.body.appendChild(script);
+  })();
+</script>
+
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     var searchInput = document.getElementById('local-search-input');
@@ -775,58 +844,6 @@
       });
     });
   });
-</script>
-
-<style>
-  #live2dcanvas {
-    right: 96px !important;
-    bottom: 48px !important;
-    z-index: 98 !important;
-    pointer-events: auto;
-    background: radial-gradient(circle at 50% 58%, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0) 62%) !important;
-    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.42));
-  }
-
-  @media (max-width: 768px) {
-    #live2dcanvas {
-      display: none !important;
-    }
-  }
-</style>
-<script>
-  (function () {
-    if (window.__yinheLive2dLoaded) return;
-    window.__yinheLive2dLoaded = true;
-
-    function initLive2D() {
-      if (!window.L2Dwidget) return;
-      window.L2Dwidget.init({
-        model: {
-          jsonPath: 'https://unpkg.com/live2d-widget-model-hijiki@1.0.5/assets/hijiki.model.json'
-        },
-        display: {
-          position: 'right',
-          width: 160,
-          height: 220,
-          hOffset: 96,
-          vOffset: 48
-        },
-        mobile: {
-          show: false
-        },
-        react: {
-          opacityDefault: 0.88,
-          opacityOnHover: 1
-        }
-      });
-    }
-
-    var script = document.createElement('script');
-    script.src = 'https://unpkg.com/live2d-widget@3.1.4/lib/L2Dwidget.min.js';
-    script.async = true;
-    script.onload = initLive2D;
-    document.body.appendChild(script);
-  })();
 </script>
 <!-- hexo injector body_end end --></body>
 </html>
