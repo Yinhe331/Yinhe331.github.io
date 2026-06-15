@@ -194,17 +194,16 @@
 <body><!-- hexo injector body_begin start -->
 <div id="bg-video-wrap" style="position:fixed;inset:0;z-index:0;overflow:hidden;background:#111 url('/img/bg-video-poster.jpg') center/cover no-repeat;pointer-events:none;">
   <video id="bg-video" loop muted playsinline poster="/img/bg-video-poster.jpg"
-    src="/video/bg.mp4"
+    preload="none"
     style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 0.8s;">
   </video>
 </div>
-<div id="bg-dbg" style="position:fixed;bottom:30px;right:20px;z-index:9999;font:13px/1.5 monospace;color:#fff;background:rgba(0,0,0,0.75);padding:6px 12px;border-radius:6px;pointer-events:none;">...</div>
+<div id="bg-dbg" style="position:fixed;bottom:30px;right:20px;z-index:9999;font:13px/1.5 monospace;color:#fff;background:rgba(0,0,0,0.75);padding:6px 12px;border-radius:6px;pointer-events:none;">初始化...</div>
 <script>
 (function() {
   var v = document.getElementById('bg-video');
   var d = document.getElementById('bg-dbg');
   if (!v) return;
-
   function log(msg) { if (d) d.textContent = msg; console.log('[bg]', msg); }
 
   v.muted = true;
@@ -212,58 +211,62 @@
   v.defaultMuted = true;
 
   var VIDEO_URL = '/video/bg.mp4';
-  var CACHE_NAME = 'yinhe-bg-v9';
+  var CACHE_NAME = 'yinhe-bg-v10';
   var started = false;
 
-  function onStart() {
+  function onReady() {
     if (started) return;
     started = true;
     v.style.opacity = '1';
-    log('OK');
+    log('✓ 播放中');
     setTimeout(function(){ if (d) d.remove(); }, 2000);
   }
 
-  // Direct play attempt (src already in HTML)
-  function tryDirect() {
-    log('direct');
-    v.play().then(function() {
-      log('direct ok');
-      onStart();
-    }).catch(function(e) {
-      log('direct fail: ' + (e ? e.name : '?'));
-      tryBlob();
-    });
+  function tryPlay(why) {
+    log(why);
+    var p = v.play();
+    if (p && p.then) {
+      p.then(function() {
+        log(why + ' ok');
+        onReady();
+      }).catch(function(e) {
+        log(why + ' 阻止: ' + (e ? e.name : '?'));
+      });
+    }
   }
 
-  // Blob fallback
+  // ---- Blob approach: fetch full file, create blob URL, set src, play ----
   var blobTried = false;
-  function tryBlob() {
+
+  function loadVideo() {
     if (blobTried) return;
     blobTried = true;
-    log('blob fallback');
 
-    function setBlobAndPlay(blob) {
-      log('blob ' + (blob.size/1024/1024).toFixed(1) + 'MB');
+    function playBlob(blob) {
+      log('就绪 ' + (blob.size/1024/1024).toFixed(1) + 'MB');
+      if (v.src && v.src.startsWith('blob:')) URL.revokeObjectURL(v.src);
       var url = URL.createObjectURL(blob);
       v.src = url;
-      v.load();
-      v.addEventListener('loadedmetadata', function() {
-        log('meta ok');
-        v.play().then(function() {
-          log('blob ok');
-          onStart();
-        }).catch(function(e) {
-          log('blob blocked: ' + (e ? e.name : '?'));
-        });
+
+      v.addEventListener('canplay', function canplayHandler() {
+        v.removeEventListener('canplay', canplayHandler);
+        tryPlay('自动');
       }, {once: true});
+
+      v.load();
+
       setTimeout(function() {
         if (!started) {
-          log('retry');
-          v.play().then(onStart).catch(function(e) {
-            log('retry fail: ' + (e ? e.name : '?'));
-          });
+          log('超时重试');
+          tryPlay('超时');
         }
-      }, 1000);
+      }, 3000);
+
+      setTimeout(function() {
+        if (!started) {
+          log('请点击页面');
+        }
+      }, 8000);
     }
 
     function fromCache() {
@@ -271,66 +274,71 @@
       return caches.open(CACHE_NAME).then(function(c) {
         return c.match(VIDEO_URL).then(function(r) {
           if (!r) throw new Error('miss');
-          log('cache hit');
+          log('缓存命中');
           return r.blob();
         });
       });
     }
 
     function fetchAndCache() {
-      log('fetch ' + VIDEO_URL);
+      log('下载 0%');
       return fetch(VIDEO_URL).then(function(r) {
-        log('HTTP ' + r.status);
         if (!r.ok) throw new Error('HTTP ' + r.status);
-        return r.blob();
-      }).then(function(blob) {
-        if (window.caches) {
-          caches.open(CACHE_NAME).then(function(c) {
-            c.put(VIDEO_URL, new Response(blob, {
-              status: 200, headers: { 'Content-Type': 'video/mp4' }
-            }));
+
+        var total = parseInt(r.headers.get('Content-Length') || '0', 10);
+        var loaded = 0;
+        var reader = r.body.getReader();
+        var chunks = [];
+
+        function pump() {
+          return reader.read().then(function(result) {
+            if (result.done) {
+              var blob = new Blob(chunks, {type: 'video/mp4'});
+              if (window.caches) {
+                caches.open(CACHE_NAME).then(function(c) {
+                  c.put(VIDEO_URL, new Response(blob, {
+                    status: 200, headers: {'Content-Type': 'video/mp4'}
+                  }));
+                });
+              }
+              return blob;
+            }
+            chunks.push(result.value);
+            loaded += result.value.length;
+            if (total > 0) {
+              log('下载 ' + Math.round(loaded / total * 100) + '%');
+            }
+            return pump();
           });
         }
-        return blob;
+        return pump();
       }).catch(function(err) {
-        log('FETCH FAIL: ' + err);
+        log('下载失败: ' + err);
         throw err;
       });
     }
 
-    fromCache().then(setBlobAndPlay).catch(function() {
-      fetchAndCache().then(setBlobAndPlay).catch(function(err) {
-        log('FATAL: ' + err);
+    fromCache().then(playBlob).catch(function() {
+      fetchAndCache().then(playBlob).catch(function(err) {
+        log('失败: ' + err);
       });
     });
   }
 
-  // Error handler
-  v.addEventListener('error', function() {
-    log('err:' + (v.error ? v.error.code : '?'));
-    tryBlob();
-  });
-
-  // Click/touch fallback
+  // ---- Click/touch fallback ----
   function onUser(e) {
     if (started) return;
     if (e && e.target && (e.target.tagName === 'A' || e.target.closest('a'))) return;
-    log('click');
-    v.play().then(function() {
-      log('click ok');
-      onStart();
-    }).catch(function(e) {
-      log('click fail: ' + (e ? e.name : '?'));
-    });
+    tryPlay('点击');
   }
   document.addEventListener('click', onUser);
   document.addEventListener('touchstart', onUser);
 
-  // Try direct when video metadata loads
-  if (v.readyState >= 2) {
-    tryDirect();
+  // Start on DOM ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loadVideo);
   } else {
-    v.addEventListener('loadeddata', tryDirect);
+    loadVideo();
   }
 })();
 </script>
@@ -879,58 +887,6 @@
 
   </div>
 <!-- hexo injector body_end start -->
-<style>
-  #live2dcanvas {
-    right: 96px !important;
-    bottom: 48px !important;
-    z-index: 98 !important;
-    pointer-events: auto;
-    background: radial-gradient(circle at 50% 58%, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0) 62%) !important;
-    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.42));
-  }
-
-  @media (max-width: 768px) {
-    #live2dcanvas {
-      display: none !important;
-    }
-  }
-</style>
-<script>
-  (function () {
-    if (window.__yinheLive2dLoaded) return;
-    window.__yinheLive2dLoaded = true;
-
-    function initLive2D() {
-      if (!window.L2Dwidget) return;
-      window.L2Dwidget.init({
-        model: {
-          jsonPath: 'https://unpkg.com/live2d-widget-model-hijiki@1.0.5/assets/hijiki.model.json'
-        },
-        display: {
-          position: 'right',
-          width: 160,
-          height: 220,
-          hOffset: 96,
-          vOffset: 48
-        },
-        mobile: {
-          show: false
-        },
-        react: {
-          opacityDefault: 0.88,
-          opacityOnHover: 1
-        }
-      });
-    }
-
-    var script = document.createElement('script');
-    script.src = 'https://unpkg.com/live2d-widget@3.1.4/lib/L2Dwidget.min.js';
-    script.async = true;
-    script.onload = initLive2D;
-    document.body.appendChild(script);
-  })();
-</script>
-
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     var searchInput = document.getElementById('local-search-input');
@@ -1001,6 +957,58 @@
       });
     });
   });
+</script>
+
+<style>
+  #live2dcanvas {
+    right: 96px !important;
+    bottom: 48px !important;
+    z-index: 98 !important;
+    pointer-events: auto;
+    background: radial-gradient(circle at 50% 58%, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0) 62%) !important;
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.42));
+  }
+
+  @media (max-width: 768px) {
+    #live2dcanvas {
+      display: none !important;
+    }
+  }
+</style>
+<script>
+  (function () {
+    if (window.__yinheLive2dLoaded) return;
+    window.__yinheLive2dLoaded = true;
+
+    function initLive2D() {
+      if (!window.L2Dwidget) return;
+      window.L2Dwidget.init({
+        model: {
+          jsonPath: 'https://unpkg.com/live2d-widget-model-hijiki@1.0.5/assets/hijiki.model.json'
+        },
+        display: {
+          position: 'right',
+          width: 160,
+          height: 220,
+          hOffset: 96,
+          vOffset: 48
+        },
+        mobile: {
+          show: false
+        },
+        react: {
+          opacityDefault: 0.88,
+          opacityOnHover: 1
+        }
+      });
+    }
+
+    var script = document.createElement('script');
+    script.src = 'https://unpkg.com/live2d-widget@3.1.4/lib/L2Dwidget.min.js';
+    script.async = true;
+    script.onload = initLive2D;
+    document.body.appendChild(script);
+  })();
 </script>
 <!-- hexo injector body_end end --></body>
 </html>
