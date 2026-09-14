@@ -1,898 +1,124 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  
-  <title>银河的博客</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="个人技术博客，记录学习历程">
-<meta property="og:type" content="website">
-<meta property="og:title" content="银河的博客">
-<meta property="og:url" content="https://yinhe331.github.io/index.html">
-<meta property="og:site_name" content="银河的博客">
-<meta property="og:description" content="个人技术博客，记录学习历程">
-<meta property="og:locale" content="zh_CN">
-<meta property="article:author" content="银河">
-<meta property="article:tag" content="技术,博客,学习">
-<meta name="twitter:card" content="summary">
-  
-    <link rel="alternative" href="/atom.xml" title="银河的博客" type="application/atom+xml">
-  
-  
-    <link rel="icon" href="/http://oayoilchh.bkt.clouddn.com/2016/07/27/18:05:26%20">
-  
-  
-      
-<link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
-
-  
-  
-<link rel="stylesheet" href="/css/style.css">
-
-  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
-  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-  
-    
-    
-  
-  
-      <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
-  
-  <!-- 加载特效 -->
-    <script src="/js/pace.js"></script>
-    <link href="/css/pace/pace-theme-flash.css" rel="stylesheet" />
-  <script>
-      var yiliaConfig = {
-          rootUrl: '/',
-          fancybox: true,
-          animate: true,
-          isHome: true,
-          isPost: false,
-          isArchive: false,
-          isTag: false,
-          isCategory: false,
-          open_in_new: false
-      }
-  </script>
-<!-- hexo injector head_end start -->
-<style>
-  .mid-col {
-    padding-bottom: 96px;
-  }
-
-  #container .left-col,
-  #container #mobile-nav {
-    background: transparent !important;
-  }
-
-  .article {
-    max-width: 960px;
-    margin: 32px auto;
-    padding: 0 28px;
-  }
-
-  .article-inner {
-    background: rgba(9, 14, 24, 0.62);
-    border: 1px solid rgba(255, 255, 255, 0.16);
-    box-shadow: 0 18px 44px rgba(0, 0, 0, 0.42);
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
-  }
-
-  .article-title {
-    color: rgba(255, 255, 255, 0.92);
-    font-weight: 500;
-    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.45);
-  }
-
-  .article-title:hover {
-    color: #ffffff;
-  }
-
-  .article-entry {
-    color: rgba(241, 246, 255, 0.9);
-    font-size: 15px;
-  }
-
-  .article-entry h1,
-  .article-entry h2,
-  .article-entry h3 {
-    color: #ffffff;
-    line-height: 1.35;
-  }
-
-  .article-entry a {
-    color: #8bd7ff;
-  }
-
-  .article-entry a:hover {
-    color: #ffffff;
-  }
-
-  .article-meta time {
-    color: rgba(255, 255, 255, 0.78);
-  }
-
-  #footer {
-    bottom: 18px;
-    color: rgba(255, 255, 255, 0.72);
-  }
-
-  .footer-left {
-    float: none;
-    text-align: center;
-  }
-
-  #header .header-author {
-    margin: 14px 0 12px;
-    font-size: 24px;
-    line-height: 1.25;
-  }
-
-  #header .header-subtitle {
-    max-width: 220px;
-    margin: 0 auto 14px;
-    color: rgba(255, 255, 255, 0.82);
-  }
-
-  #header .search {
-    height: 28px;
-    padding: 0 8px;
-    border: 1px solid rgba(255, 255, 255, 0.26);
-    border-radius: 6px;
-    background: rgba(255, 255, 255, 0.08);
-    box-sizing: border-box;
-  }
-
-  #header .search::placeholder {
-    color: rgba(255, 255, 255, 0.62);
-  }
-
-  #local-search-result {
-    max-width: 220px;
-    margin: 8px auto 0;
-    color: rgba(255, 255, 255, 0.86);
-    text-align: left;
-  }
-
-  #local-search-result .search-result-list {
-    list-style: none;
-    margin: 0;
-    padding: 8px 10px;
-    border: 1px solid rgba(255, 255, 255, 0.16);
-    border-radius: 6px;
-    background: rgba(8, 12, 20, 0.72);
-    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.28);
-  }
-
-  #local-search-result .search-result-list li {
-    margin: 0;
-    line-height: 1.55;
-  }
-
-  #local-search-result .search-result-list a {
-    color: #8bd7ff;
-    font-size: 13px;
-  }
-
-  #local-search-result .search-result-list a:hover {
-    color: #ffffff;
-  }
-
-  @media (max-width: 800px) {
-    .article {
-      margin: 18px 12px;
-      padding: 0;
-    }
-
-    .article-entry {
-      padding-left: 22px;
-      padding-right: 22px;
-    }
-  }
-</style>
-<!-- hexo injector head_end end --><meta name="generator" content="Hexo 8.1.1"></head>
-<body><!-- hexo injector body_begin start -->
-<div id="bg-video-wrap" style="position:fixed;inset:0;z-index:0;overflow:hidden;background:#111 url('/img/bg-video-poster.jpg') center/cover no-repeat;pointer-events:none;">
-  <video id="bg-video" loop muted playsinline poster="/img/bg-video-poster.jpg"
-    preload="none"
-    style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 0.8s;">
-  </video>
-</div>
-<div id="bg-dbg" style="position:fixed;bottom:30px;right:20px;z-index:9999;font:13px/1.5 monospace;color:#fff;background:rgba(0,0,0,0.75);padding:6px 12px;border-radius:6px;pointer-events:none;">初始化...</div>
-<script>
-(function() {
-  var v = document.getElementById('bg-video');
-  var d = document.getElementById('bg-dbg');
-  if (!v) return;
-  function log(msg) { if (d) d.textContent = msg; console.log('[bg]', msg); }
-
-  v.muted = true;
-  v.volume = 0;
-  v.defaultMuted = true;
-
-  var VIDEO_URL = '/video/bg.mp4';
-  var CACHE_NAME = 'yinhe-bg-v10';
-  var started = false;
-
-  function onReady() {
-    if (started) return;
-    started = true;
-    v.style.opacity = '1';
-    log('✓ 播放中');
-    setTimeout(function(){ if (d) d.remove(); }, 2000);
-  }
-
-  function tryPlay(why) {
-    log(why);
-    var p = v.play();
-    if (p && p.then) {
-      p.then(function() {
-        log(why + ' ok');
-        onReady();
-      }).catch(function(e) {
-        log(why + ' 阻止: ' + (e ? e.name : '?'));
-      });
-    }
-  }
-
-  // ---- Blob approach: fetch full file, create blob URL, set src, play ----
-  var blobTried = false;
-
-  function loadVideo() {
-    if (blobTried) return;
-    blobTried = true;
-
-    function playBlob(blob) {
-      log('就绪 ' + (blob.size/1024/1024).toFixed(1) + 'MB');
-      if (v.src && v.src.startsWith('blob:')) URL.revokeObjectURL(v.src);
-      var url = URL.createObjectURL(blob);
-      v.src = url;
-
-      v.addEventListener('canplay', function canplayHandler() {
-        v.removeEventListener('canplay', canplayHandler);
-        tryPlay('自动');
-      }, {once: true});
-
-      v.load();
-
-      setTimeout(function() {
-        if (!started) {
-          log('超时重试');
-          tryPlay('超时');
+<!DOCTYPE html><html lang="zh-CN" class="geist_a71539c9-module__T19VSG__variable geist_mono_8d43a2aa-module__8Li5zG__variable noto_serif_sc_4b5b2b75-module__o_XRgq__variable h-full antialiased"><head><meta charSet="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="preload" href="/_next/static/media/797e433ab948586e-s.p.08e28id.o-okb.woff2" as="font" crossorigin="" type="font/woff2"/><link rel="preload" href="/_next/static/media/caa3a2e1cccd8315-s.p.09~u27dqhyhd6.woff2" as="font" crossorigin="" type="font/woff2"/><link rel="preload" href="/_next/static/media/f112ed7f0b91582f-s.p.0xqqmnf1a3x8p.woff2" as="font" crossorigin="" type="font/woff2"/><link rel="preload" as="image" href="/avatar-cat.png"/><link rel="preload" as="image" href="/covers/chatter-blog-theme.jpg" referrerPolicy="no-referrer"/><link rel="preload" as="image" href="/covers/welcome-starry-mirror.jpg"/><link rel="preload" href="/bg-video-poster.jpg" as="image"/><link rel="stylesheet" href="/_next/static/chunks/0tmg9vcbw.fm2.css" data-precedence="next"/><link rel="stylesheet" href="/_next/static/chunks/066jf0nk75nic.css" data-precedence="next"/><link rel="stylesheet" href="/_next/static/chunks/0~ydk.tni6snc.css" data-precedence="next"/><link rel="stylesheet" href="/_next/static/chunks/0x6pu1naly4g4.css" data-precedence="next"/><link rel="preload" as="script" fetchPriority="low" href="/_next/static/chunks/0uvxhom03hg.7.js"/><script src="/_next/static/chunks/0z-pdnh41p~cf.js" async=""></script><script src="/_next/static/chunks/0v7l98kfokxoo.js" async=""></script><script src="/_next/static/chunks/0qfnk9_y6d~r5.js" async=""></script><script src="/_next/static/chunks/turbopack-0yguvad6uyz68.js" async=""></script><script src="/_next/static/chunks/08.znc8oafh1v.js" async=""></script><script src="/_next/static/chunks/0s9ya1l4qon8d.js" async=""></script><script src="/_next/static/chunks/0kkdkx8vkwq8~.js" async=""></script><script src="/_next/static/chunks/0-fvc0uzqms2d.js" async=""></script><meta name="next-size-adjust" content=""/><title>银河的博客</title><meta name="description" content="记录 CTF 解题、技术学习和编程经验。慢慢写，慢慢变强。"/><link rel="icon" href="/avatar-cat.png"/><link rel="apple-touch-icon" href="/avatar-cat.png"/><style>
+              #app-mount-root { opacity: 0; visibility: hidden; pointer-events: none; }
+              html.splash-seen #app-mount-root { opacity: 1 !important; visibility: visible !important; pointer-events: auto !important; }
+            </style><script>
+              try {
+                if (sessionStorage.getItem('hasSeenSplash') === 'true') {
+                  document.documentElement.classList.add('splash-seen');
+                }
+              } catch (e) {}
+            </script><script src="/_next/static/chunks/03~yq9q893hmn.js" noModule=""></script></head><body class="w-screen overflow-x-hidden min-h-full flex flex-col relative transition-colors duration-1000 bg-slate-50 dark:bg-slate-950 font-serif"><div hidden=""><!--$--><!--/$--></div><div class="invisible"><div id="app-mount-root" class="flex-1 flex flex-col transition-opacity duration-1000"><div class="fixed inset-0 z-[-1] pointer-events-none overflow-hidden"><div class="absolute inset-0 z-[-11] bg-cover bg-center" style="background-image:url(/bg-video-poster.jpg)"></div><video class="absolute inset-0 z-[-10] h-full w-full object-cover transition-opacity duration-1000 opacity-0" autoPlay="" loop="" muted="" playsInline="" preload="auto" poster="/bg-video-poster.jpg"><source src="/video/bg.mp4" type="video/mp4"/></video><div class="absolute inset-0 z-[-9] bg-white/30 dark:bg-slate-900/40 backdrop-blur-md transition-colors duration-1000"></div><div class="absolute inset-0 z-[-8] opacity-60 dark:opacity-20 mix-blend-color transition-opacity duration-1000 transform-gpu" style="background:linear-gradient(-45deg, #a18cd1, #fbc2eb, #a1c4fd, #c2e9fb);background-size:400% 400%;animation:gradientMove 15s ease infinite"></div><div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-white/40 dark:bg-indigo-900/20 blur-[100px] rounded-full z-[-7] md:mix-blend-overlay"></div><div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-indigo-400/30 dark:bg-purple-900/30 blur-[100px] rounded-full z-[-7] md:mix-blend-overlay"></div><div class="hidden md:block absolute inset-0 w-full h-full"><div class="transition-opacity duration-1000 opacity-100"><div class="fixed inset-0 w-full h-full pointer-events-none z-10 overflow-hidden mix-blend-screen"><style>
+        /* 内层：纯粹的光芒呼吸闪烁 */
+        @keyframes fireflyBreathe {
+          0%, 100% { 
+            opacity: 0; 
+            transform: scale(0.3);
+          }
+          50% { 
+            opacity: 1; 
+            transform: scale(1.2); 
+            box-shadow: 0 0 10px 3px rgba(100, 255, 150, 0.8), 0 0 20px 6px rgba(50, 255, 100, 0.4);
+          }
         }
-      }, 3000);
 
-      setTimeout(function() {
-        if (!started) {
-          log('请点击页面');
+        /* 外层：四种不同的大范围随机漂浮轨迹 (利用 vw 和 vh 跨越屏幕) */
+        @keyframes float1 {
+          0%, 100% { transform: translate(0, 0); }
+          33% { transform: translate(10vw, -15vh); }
+          66% { transform: translate(-5vw, -20vh); }
         }
-      }, 8000);
-    }
-
-    function fromCache() {
-      if (!window.caches) return Promise.reject('no caches');
-      return caches.open(CACHE_NAME).then(function(c) {
-        return c.match(VIDEO_URL).then(function(r) {
-          if (!r) throw new Error('miss');
-          log('缓存命中');
-          return r.blob();
-        });
-      });
-    }
-
-    function fetchAndCache() {
-      log('下载 0%');
-      return fetch(VIDEO_URL).then(function(r) {
-        if (!r.ok) throw new Error('HTTP ' + r.status);
-
-        var total = parseInt(r.headers.get('Content-Length') || '0', 10);
-        var loaded = 0;
-        var reader = r.body.getReader();
-        var chunks = [];
-
-        function pump() {
-          return reader.read().then(function(result) {
-            if (result.done) {
-              var blob = new Blob(chunks, {type: 'video/mp4'});
-              if (window.caches) {
-                caches.open(CACHE_NAME).then(function(c) {
-                  c.put(VIDEO_URL, new Response(blob, {
-                    status: 200, headers: {'Content-Type': 'video/mp4'}
-                  }));
-                });
+        @keyframes float2 {
+          0%, 100% { transform: translate(0, 0); }
+          33% { transform: translate(-12vw, 10vh); }
+          66% { transform: translate(8vw, 15vh); }
+        }
+        @keyframes float3 {
+          0%, 100% { transform: translate(0, 0); }
+          33% { transform: translate(15vw, 15vh); }
+          66% { transform: translate(-10vw, 5vh); }
+        }
+        @keyframes float4 {
+          0%, 100% { transform: translate(0, 0); }
+          33% { transform: translate(-15vw, -10vh); }
+          66% { transform: translate(10vw, -15vh); }
+        }
+      </style></div></div><div class="transition-opacity duration-1000 opacity-0"><div class="fixed inset-0 w-full h-full pointer-events-none z-10 overflow-hidden"><style>
+        @keyframes sakuraFall {
+          0% { transform: translate(0, -10vh) rotate(0deg); opacity: 0; }
+          10% { opacity: 1; }
+          80% { opacity: 1; }
+          100% { transform: translate(15vw, 110vh) rotate(360deg); opacity: 0; }
+        }
+      </style></div></div><div class="fixed bottom-0 left-0 w-full h-32 pointer-events-none z-10 overflow-hidden transition-colors duration-1000"><style>@keyframes swayWildGrass { 0% { transform: rotate(-5deg); } 100% { transform: rotate(15deg); } }</style></div></div></div><div class="hidden md:block"><div class="fixed top-28 h-[30vh] left-0 right-0 overflow-hidden pointer-events-none z-0"><style>
+        @keyframes float-left {
+          0% {
+            right: -100%;
+            transform: translateX(100%);
+          }
+          100% {
+            right: 100%;
+            transform: translateX(-100%);
+          }
+        }
+      </style></div></div><div class="relative z-10 flex-1 flex flex-col"><div class="min-h-screen relative pb-10"><header class="hidden md:block w-full fixed top-0 left-0 right-0 z-50 transition-all duration-500 border-b translate-y-0 bg-white/40 dark:bg-slate-900/50 backdrop-blur-xl border-white/20 dark:border-white/5 shadow-sm"><div class="w-[90%] max-w-6xl mx-auto h-16 flex items-center justify-between px-4 sm:px-[30px] box-border"><a class="text-xl font-black text-slate-800 dark:text-white tracking-tighter hover:text-indigo-600 dark:hover:text-indigo-400 transition-all duration-300" href="/">银河<span class="text-indigo-500 mx-1">の</span>博客</a><nav class="flex gap-8 text-sm font-bold"><a class="relative py-1 transition-colors text-indigo-600 dark:text-indigo-400" href="/">首页<span class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 bg-indigo-500 rounded-full animate-pulse"></span></a><a class="relative py-1 transition-colors text-slate-700 dark:text-slate-200 hover:text-indigo-600" href="/projects/">项目</a><a class="relative py-1 transition-colors text-slate-700 dark:text-slate-200 hover:text-indigo-600" href="/timeline/">归档</a><a class="relative py-1 transition-colors text-slate-700 dark:text-slate-200 hover:text-indigo-600" href="/photowall/">照片墙</a><a class="relative py-1 transition-colors text-slate-700 dark:text-slate-200 hover:text-indigo-600" href="/music/">音乐</a><a class="relative py-1 transition-colors text-slate-700 dark:text-slate-200 hover:text-indigo-600" href="/moments/">说说</a><a class="relative py-1 transition-colors text-slate-700 dark:text-slate-200 hover:text-indigo-600" href="/chatter/">杂谈</a><a class="relative py-1 transition-colors text-slate-700 dark:text-slate-200 hover:text-indigo-600" href="/friends/">友链</a><a class="relative py-1 transition-colors text-slate-700 dark:text-slate-200 hover:text-indigo-600" href="/about/">关于</a></nav></div></header><div class="md:hidden"><button class="fixed top-1/2 right-0 -translate-y-1/2 w-12 h-28 bg-indigo-500/80 backdrop-blur-xl rounded-l-full shadow-[-5px_0_20px_rgba(99,102,241,0.4)] z-[60] flex items-center justify-center transition-all duration-500 border-y border-l border-white/30 touch-none translate-x-0 opacity-100" draggable="false" style="transform:none;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;touch-action:pan-x"><div class="flex flex-col gap-1.5 items-center justify-center mr-2"><div class="w-1.5 h-1.5 bg-white/90 rounded-full"></div><div class="w-1.5 h-1.5 bg-white/90 rounded-full"></div><div class="w-1.5 h-1.5 bg-white/90 rounded-full"></div></div></button></div><div style="opacity:0;transform:translateY(20px)"><div class="w-full max-w-6xl mx-auto mt-24 sm:mt-28 px-4 sm:px-6 lg:px-10 relative z-10"><div class="relative w-full max-w-2xl mx-auto mb-10 z-[100]"><form class="relative group"><input type="text" class="w-full pl-14 pr-6 py-4 bg-white/50 dark:bg-slate-800/50 backdrop-blur-xl border border-white/40 dark:border-white/10 rounded-3xl shadow-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/50 text-slate-800 dark:text-slate-200 transition-all placeholder-slate-500 dark:placeholder-slate-400 font-medium text-lg relative z-0" placeholder="搜寻标题、描述或标签..." autoComplete="off" spellCheck="false" value=""/><div class="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none select-none z-10"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-slate-400 group-focus-within:text-indigo-500 transition-colors drop-shadow-sm"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></div></form></div><main class="flex flex-col gap-6 w-full mt-6"><div class="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full"><div class="col-span-1 lg:col-span-7 flex flex-col"><div class="md:col-span-7 rounded-3xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-xl p-5 sm:p-6 md:p-8 flex flex-col justify-between transition-all duration-700 hover:scale-[1.01] cursor-pointer group relative overflow-hidden h-full min-h-[220px] md:min-h-[280px]"><div class="flex items-start justify-between relative z-10"><div class="flex items-center gap-4 md:gap-6 w-full"><div class="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-xl md:rounded-2xl bg-gradient-to-tr from-indigo-500 to-purple-500 p-1 shadow-lg flex-shrink-0 transition-transform duration-500 group-hover:rotate-3"><img src="/avatar-cat.png" alt="avatar" class="w-full h-full rounded-lg md:rounded-xl object-cover bg-white"/></div><div class="flex-1 min-w-0"><h1 class="text-xl sm:text-2xl md:text-3xl font-bold text-slate-900 dark:text-white mb-1 md:mb-2 pb-1 leading-snug tracking-wider transition-colors duration-700 truncate">银河</h1><p class="text-xs sm:text-sm md:text-base text-slate-700 dark:text-slate-300 font-medium leading-relaxed max-w-md transition-colors duration-700 line-clamp-2 md:line-clamp-none">记录 CTF 解题、技术学习和编程经验。慢慢写，慢慢变强。</p></div></div></div><div class="flex flex-col md:flex-row items-center md:items-end justify-between mt-6 md:mt-8 gap-5 md:gap-6 relative z-10"><div class="flex gap-2 sm:gap-6 w-full md:w-auto justify-between sm:justify-around md:justify-start px-2 sm:px-0"><div class="text-center group/stat px-2"><div class="text-xl md:text-2xl font-black text-indigo-600 dark:text-indigo-400 transition-transform group-hover/stat:scale-110">1</div><div class="text-[9px] md:text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mt-0.5">文章</div></div><div class="w-px h-8 md:h-10 bg-slate-300/50 dark:bg-slate-700 hidden md:block"></div><div class="text-center group/stat px-2"><div class="text-xl md:text-2xl font-black text-purple-600 dark:text-purple-400 transition-transform group-hover/stat:scale-110">1</div><div class="text-[9px] md:text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mt-0.5">杂谈</div></div><div class="w-px h-8 md:h-10 bg-slate-300/50 dark:bg-slate-700 hidden md:block"></div><div class="text-center group/stat px-2"><div class="text-xl md:text-2xl font-black text-pink-600 dark:text-pink-400 transition-transform group-hover/stat:scale-110">2</div><div class="text-[9px] md:text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mt-0.5">照片</div></div></div><div class="flex gap-2 md:gap-3 flex-wrap justify-center md:justify-end w-full md:w-auto"><a href="https://github.com/Yinhe331" target="_blank" rel="noopener noreferrer"><div class="w-9 h-9 md:w-10 md:h-10 rounded-xl bg-white/50 dark:bg-slate-700/50 flex items-center justify-center text-slate-700 dark:text-slate-300 hover:bg-indigo-500 hover:text-white dark:hover:bg-indigo-600 dark:hover:text-white transition-all duration-300 border border-white/40 dark:border-white/10 shadow-sm" title="github"><svg class="w-4 h-4 md:w-5 md:h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.464-1.11-1.464-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.294 2.747-1.025 2.747-1.025.546 1.379.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.161 22 16.418 22 12c0-5.523-4.477-10-10-10z"></path></svg></div></a><div class="w-9 h-9 md:w-10 md:h-10 rounded-xl bg-white/50 dark:bg-slate-700/50 flex items-center justify-center text-slate-700 dark:text-slate-300 hover:bg-indigo-500 hover:text-white dark:hover:bg-indigo-600 dark:hover:text-white transition-all duration-300 border border-white/40 dark:border-white/10 shadow-sm" title="gitee"><svg class="w-4 h-4 md:w-5 md:h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M11.984 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.016 0zm6.09 5.333c.328 0 .593.266.592.593v1.482a.594.594 0 0 1-.593.592H9.777c-.982 0-1.778.796-1.778 1.778v5.63c0 .327.266.592.593.592h5.63c.982 0 1.778-.796 1.778-1.778v-.296a.593.593 0 0 0-.592-.593h-4.15a.592.592 0 0 1-.592-.592v-1.482c0-.326.266-.592.592-.592h6.81c.328 0 .593.266.593.592v3.408a4.74 4.74 0 0 1-4.741 4.74H7.11A4.74 4.74 0 0 1 2.37 14.81V9.186a4.74 4.74 0 0 1 4.74-4.741h10.963v.888z"></path></svg></div><div class="w-9 h-9 md:w-10 md:h-10 rounded-xl bg-white/50 dark:bg-slate-700/50 flex items-center justify-center text-slate-700 dark:text-slate-300 hover:bg-indigo-500 hover:text-white dark:hover:bg-indigo-600 dark:hover:text-white transition-all duration-300 border border-white/40 dark:border-white/10 shadow-sm" title="google"><svg class="w-4 h-4 md:w-5 md:h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z"></path></svg></div><div class="w-9 h-9 md:w-10 md:h-10 rounded-xl bg-white/50 dark:bg-slate-700/50 flex items-center justify-center text-slate-700 dark:text-slate-300 hover:bg-indigo-500 hover:text-white dark:hover:bg-indigo-600 dark:hover:text-white transition-all duration-300 border border-white/40 dark:border-white/10 shadow-sm" title="email"><svg class="w-4 h-4 md:w-5 md:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg></div><div class="w-9 h-9 md:w-10 md:h-10 rounded-xl bg-white/50 dark:bg-slate-700/50 flex items-center justify-center text-slate-700 dark:text-slate-300 hover:bg-indigo-500 hover:text-white dark:hover:bg-indigo-600 dark:hover:text-white transition-all duration-300 border border-white/40 dark:border-white/10 shadow-sm" title="qq"><svg class="w-4 h-4 md:w-5 md:h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2c-4.418 0-8 3.582-8 8 0 1.25.289 2.433.805 3.49-1.024 1.708-1.53 3.843-1.021 5.308.203.585.806.84 1.341.57.828-.418 1.625-1.025 2.296-1.722 1.335.539 2.862.854 4.579.854 1.716 0 3.243-.315 4.578-.854.671.697 1.468 1.304 2.296 1.722.535.27 1.138.015 1.341-.57.509-1.465.003-3.6-1.021-5.308C19.71 12.433 20 11.25 20 10c0-4.418-3.582-8-8-8zm-2.5 8c-.828 0-1.5-.895-1.5-2s.672-2 1.5-2 1.5.895 1.5 2-.672 2-1.5 2zm5 0c-.828 0-1.5-.895-1.5-2s.672-2 1.5-2 1.5.895 1.5 2-.672 2-1.5 2z"></path></svg></div><div class="w-9 h-9 md:w-10 md:h-10 rounded-xl bg-white/50 dark:bg-slate-700/50 flex items-center justify-center text-slate-700 dark:text-slate-300 hover:bg-indigo-500 hover:text-white dark:hover:bg-indigo-600 dark:hover:text-white transition-all duration-300 border border-white/40 dark:border-white/10 shadow-sm" title="wechat"><svg class="w-4 h-4 md:w-5 md:h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M8.5 13.5c-3.59 0-6.5-2.42-6.5-5.4 0-2.98 2.91-5.4 6.5-5.4s6.5 2.42 6.5 5.4c0 2.98-2.91 5.4-6.5 5.4zm7.5 7.8c-2.76 0-5-2.02-5-4.5 0-2.48 2.24-4.5 5-4.5s5 2.02 5 4.5c0 2.48-2.24 4.5-5 4.5z"></path></svg></div></div></div></div></div><div class="col-span-1 lg:col-span-5 flex flex-col"><style>
+        input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 12px; height: 12px; border-radius: 50%; background: #6366f1; cursor: pointer; transition: transform 0.1s; }
+        input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.3); }
+        @keyframes safeWave { 0%, 100% { height: 4px; } 50% { height: 28px; } }
+        .safe-wave { animation: safeWave 1s ease-in-out infinite; transform-origin: bottom; will-change: height; }
+      </style><div class="h-full w-full rounded-3xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-xl p-6 flex flex-col justify-between transition-all duration-700 hover:scale-[1.02] relative group overflow-hidden cursor-pointer"><div class="absolute -top-20 -right-20 w-48 h-48 bg-indigo-500/20 blur-[50px] rounded-full transition-opacity duration-1000 opacity-30"></div><div class="flex items-center gap-5 relative z-10 mb-6 mt-2"><div class="w-20 h-20 rounded-full border-2 border-white/50 shadow-lg flex-shrink-0 overflow-hidden relative animate-[spin_6s_linear_infinite]" style="animation-play-state:paused;will-change:transform"><img src="/covers/chatter-blog-theme.jpg" alt="cover" class="w-full h-full object-cover" referrerPolicy="no-referrer"/><div class="absolute inset-0 bg-black/10"></div><div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-5 h-5 bg-white/80 backdrop-blur-sm rounded-full border border-gray-300 shadow-inner"></div></div><div class="flex-col overflow-hidden w-full"><div class="flex items-center justify-between mb-1"><span class="text-[10px] font-black text-indigo-500 dark:text-indigo-400 tracking-widest uppercase bg-white/50 dark:bg-slate-900/50 px-2 py-0.5 rounded-sm shadow-sm transition-colors duration-700">Cloud Music</span></div><h3 class="text-xl font-bold text-slate-900 dark:text-white truncate drop-shadow-sm transition-colors duration-700">My Heart Will Go On</h3><p class="text-sm text-slate-700 dark:text-slate-300 font-medium truncate drop-shadow-sm transition-colors duration-700">满舒克、MuSik I、廖伟珊</p></div></div><div class="relative z-10 mb-2 h-6 overflow-hidden"><p class="text-xs font-bold text-indigo-600 dark:text-indigo-400 truncate"></p></div><div class="relative z-10 mt-auto"><div class="flex items-center gap-3 text-xs text-slate-600 dark:text-slate-300 font-bold mb-3 transition-colors duration-700"><span class="w-10 text-right">00:00</span><input type="range" min="0" max="100" class="flex-1 h-1.5 bg-white/40 dark:bg-slate-700/50 rounded-full appearance-none outline-none cursor-pointer shadow-inner" style="background:linear-gradient(to right, #818cf8 0%, rgba(148,163,184,0.4) 0%)" value="0"/><span class="w-10">00:00</span></div><div class="flex items-center justify-center gap-6"><button class="text-slate-700 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors drop-shadow-sm relative z-20"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"></path></svg></button><button class="w-12 h-12 bg-indigo-500 text-white rounded-full flex items-center justify-center shadow-lg hover:bg-indigo-600 hover:scale-110 transition-all border-2 border-white/50 dark:border-slate-600 relative z-20"><svg class="w-5 h-5 ml-1" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg></button><button class="text-slate-700 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors drop-shadow-sm relative z-20"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"></path></svg></button></div></div></div></div></div><div class="w-full mt-[-10px]"><style>
+        @keyframes cursorBlink {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0; }
+        }
+        .animate-cursor {
+          animation: cursorBlink 0.8s step-end infinite;
+        }
+        /* 核心修改：让动画高度从 4px 到 28px */
+        @keyframes safeWave {
+          0%, 100% { height: 8px; }
+          50% { height: 28px; }
+        }
+        .safe-wave-active {
+          animation: safeWave 1s ease-in-out infinite;
+        }
+      </style><div class="w-full rounded-3xl bg-slate-900/80 dark:bg-slate-950/90 backdrop-blur-xl border border-white/10 shadow-2xl p-5 flex items-center justify-between transition-all duration-700 hover:shadow-indigo-500/20 group h-20"><div class="flex items-end justify-center gap-[4px] h-8 w-16"><div class="w-1.5 rounded-t-sm transition-all duration-500 ease-out h-1 bg-slate-600 shadow-none" style="animation-delay:0ms;height:4px"></div><div class="w-1.5 rounded-t-sm transition-all duration-500 ease-out h-1 bg-slate-600 shadow-none" style="animation-delay:200ms;height:4px"></div><div class="w-1.5 rounded-t-sm transition-all duration-500 ease-out h-1 bg-slate-600 shadow-none" style="animation-delay:400ms;height:4px"></div><div class="w-1.5 rounded-t-sm transition-all duration-500 ease-out h-1 bg-slate-600 shadow-none" style="animation-delay:100ms;height:4px"></div><div class="w-1.5 rounded-t-sm transition-all duration-500 ease-out h-1 bg-slate-600 shadow-none" style="animation-delay:300ms;height:4px"></div></div><div class="flex-1 px-8 flex justify-center items-center overflow-hidden"><p class="text-white text-lg font-bold tracking-widest truncate drop-shadow-[0_0_8px_rgba(99,102,241,0.8)]"><span class="inline-block w-[3px] h-5 bg-indigo-400 align-middle ml-1 shadow-[0_0_8px_rgba(99,102,241,0.8)] animate-cursor"></span></p></div><div class="w-16 flex justify-end"><svg class="w-6 h-6 text-indigo-400/50 transition-all duration-500 opacity-30" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path></svg></div></div></div><div class="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full"><div class="col-span-1 lg:col-span-4 flex flex-col min-h-[300px]"><div class="md:col-span-4 rounded-3xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-xl overflow-hidden relative group min-h-[420px] h-full flex flex-col"><a class="absolute inset-0 z-20" aria-label="阅读 欢迎来到银河的博客" href="/posts/welcome/"></a><div class="absolute inset-0 z-0" style="opacity:0"><img src="/covers/welcome-starry-mirror.jpg" class="w-full h-full object-cover opacity-90 transition-transform duration-1000 group-hover:scale-105" alt="欢迎来到银河的博客"/><div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent"></div></div><div class="relative z-10 flex flex-col justify-end p-6 w-full mt-auto h-full pointer-events-none"><div class="flex items-center gap-2 mb-3"><span class="px-3 py-1 bg-indigo-500/80 backdrop-blur-lg rounded-full text-[10px] text-white font-black uppercase tracking-widest shadow-lg">Latest Insight</span><span class="px-2 py-1 bg-black/40 backdrop-blur-md border border-white/20 rounded-full text-[10px] text-white/90 font-mono tracking-wider"><i class="ri-time-line mr-1"></i>2025.11.17 21:00</span></div><h2 class="text-2xl font-bold text-white mb-2 group-hover:-translate-y-1 transition-transform drop-shadow-md">欢迎来到银河的博客</h2><p class="text-sm text-gray-300 line-clamp-3 drop-shadow-sm mb-6">记录 CTF 解题、技术学习和编程经验。</p></div></div></div><div class="col-span-1 lg:col-span-8 flex flex-col gap-6"><a class="w-full rounded-3xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-xl overflow-hidden transition-all duration-700 hover:scale-[1.02] relative group min-h-[200px] sm:min-h-[220px] flex-shrink-0" href="/photowall/"><img src="/bg-video-poster.jpg" class="w-full h-full absolute inset-0 object-cover transition-transform duration-700 group-hover:scale-105 opacity-90"/><div class="absolute inset-0 bg-black/30 dark:bg-black/50 group-hover:bg-black/10 transition-colors duration-500"></div><div class="absolute bottom-4 left-4 sm:bottom-6 sm:left-6 right-6"><h3 class="text-2xl sm:text-3xl font-bold text-white mb-1 sm:mb-2 underline decoration-pink-400">博客背景</h3><p class="text-white/90 text-sm sm:text-lg line-clamp-1">给博客留一块安静的视觉角落。</p></div></a><div class="grid grid-cols-1 sm:grid-cols-3 gap-6 w-full flex-1"><div class="sm:col-span-2 flex flex-col min-h-[200px]"><div class="w-full h-full rounded-3xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-xl overflow-hidden relative group min-h-[220px] flex flex-col"><a class="absolute inset-0 z-20" aria-label="查看杂谈: 博客主题切换记录" href="/chatter/blog-theme-switch/"></a><div class="absolute inset-0 z-0" style="opacity:0;filter:blur(10px);transform:scale(0.95)"><img src="/covers/chatter-blog-theme.jpg" class="w-full h-full object-cover opacity-80 dark:opacity-60 transition-transform duration-1000 group-hover:scale-105" alt="Chatter Cover"/><div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-black/10"></div></div><div class="relative z-10 flex flex-col justify-center p-6 md:p-8 h-full pointer-events-none w-full md:w-[85%]"><div class="flex items-end gap-2 mb-2"><span class="text-[10px] font-black text-indigo-400 uppercase tracking-widest bg-black/30 backdrop-blur-sm px-2 py-1 rounded-md border border-white/10 shadow-sm">Records</span><span class="text-[11px] font-mono text-slate-300 drop-shadow-md">2026.09.14 20:00</span></div><h3 class="text-2xl font-bold text-white mb-3 group-hover:text-indigo-300 transition-colors line-clamp-1 drop-shadow-md">博客主题切换记录</h3><p class="text-sm text-slate-300 font-medium leading-relaxed drop-shadow-md line-clamp-2">把博客迁移到 XHBlogs 风格。</p></div></div></div><div class="sm:col-span-1 flex flex-col min-h-[120px]"><div class="h-full w-full rounded-3xl backdrop-blur-md border shadow-xl p-6 flex flex-col justify-center items-center transition-all duration-500 hover:scale-[1.05] cursor-pointer group relative overflow-hidden
+        bg-slate-800/40 border-slate-600/50
+      "><div class="relative w-20 h-20 rounded-full overflow-hidden mb-3 shadow-inner flex-shrink-0"><div class="absolute inset-0 transition-transform duration-700 -translate-y-full bg-gradient-to-tr from-sky-300 to-yellow-200"></div><div class="absolute inset-0 transition-transform duration-700 translate-y-0 bg-gradient-to-tr from-indigo-900 to-slate-800"></div><div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all duration-700 opacity-0 rotate-90 scale-50 text-3xl drop-shadow-md">🌸</div><div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all duration-700 opacity-100 rotate-0 scale-100 text-3xl drop-shadow-md">✨</div></div><div class="text-center z-10 mt-auto"><h3 class="text-xl font-bold transition-colors duration-500 text-white">夜间模式</h3><p class="text-sm font-medium mt-1 transition-colors duration-500 text-slate-400">流萤飞舞的深空</p></div></div></div></div></div></div><div class="w-full mt-4"><div class="md:col-span-12 rounded-3xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-xl overflow-hidden flex flex-col md:flex-row items-stretch transition-colors duration-700 h-auto md:h-20 group"><div class="bg-slate-900 dark:bg-black text-white px-8 py-4 md:py-0 flex items-center justify-center font-mono text-2xl md:text-3xl font-black tracking-widest shadow-inner relative overflow-hidden group-hover:text-indigo-400 transition-colors"><div class="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent pointer-events-none"></div>00:00:00<div class="absolute left-0 right-0 top-1/2 h-px bg-black/50"></div></div><div class="flex-1 px-6 py-4 md:py-0 flex flex-wrap items-center justify-between gap-4 text-xs md:text-sm font-bold text-slate-600 dark:text-slate-300"><div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span><span>系统已稳定运行：<span class="text-indigo-600 dark:text-indigo-400 font-black"></span></span></div><div class="flex gap-2"><span class="px-2 py-1 bg-white/50 dark:bg-slate-700/50 rounded-md shadow-sm flex items-center gap-1 border border-white/40 dark:border-slate-600"><svg class="w-3.5 h-3.5 text-sky-500" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>Next.js 15</span><span class="px-2 py-1 bg-white/50 dark:bg-slate-700/50 rounded-md shadow-sm flex items-center gap-1 border border-white/40 dark:border-slate-600"><svg class="w-3.5 h-3.5 text-cyan-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 22.6l-9.8-5.6V5.6L12 0l9.8 5.6v11.4l-9.8 5.6zm-8.2-6.5l8.2 4.7 8.2-4.7V7.5L12 2.8 3.8 7.5v8.6z"/></svg>React 19</span><span class="px-2 py-1 bg-white/50 dark:bg-slate-700/50 rounded-md shadow-sm flex items-center gap-1 border border-white/40 dark:border-slate-600"><svg class="w-3.5 h-3.5 text-teal-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12.001,4.8c-3.2,0-5.2,1.6-6,4.8c1.2-1.6,2.6-2.2,4.2-1.8c0.913,0.228,1.565,0.89,2.288,1.624C13.666,10.618,15.027,12,18.001,12 c3.2,0,5.2-1.6,6-4.8c-1.2,1.6-2.6,2.2-4.2,1.8c-0.913-0.228-1.565-0.89-2.288-1.624C16.337,6.182,14.976,4.8,12.001,4.8z M6.001,12c-3.2,0-5.2,1.6-6,4.8c1.2-1.6,2.6-2.2,4.2-1.8c0.913,0.228,1.565,0.89,2.288,1.624c1.177,1.194,2.538,2.576,5.512,2.576 c3.2,0,5.2-1.6,6-4.8c-1.2,1.6-2.6,2.2-4.2,1.8c-0.913-0.228-1.565-0.89-2.288-1.624C10.337,13.382,8.976,12,6.001,12z"/></svg>Tailwind 4</span></div><a href="" target="_blank" rel="noopener noreferrer" class="hover:text-indigo-500 transition-colors border-b border-dashed border-slate-400 dark:border-slate-500 pb-0.5"></a></div></div></div></main></div></div></div><!--$--><!--/$--></div><div class="hidden md:block"></div><div class="hidden md:block"><div class="fixed bottom-6 left-6 z-[9999] flex flex-col items-start gap-3"><button class="w-12 h-12 rounded-full flex items-center justify-center shadow-xl backdrop-blur-xl border border-white/40 dark:border-white/10 transition-all duration-500 hover:scale-110 active:scale-95 z-50
+          bg-white/70 dark:bg-slate-800/80 text-slate-700 dark:text-white
+        "><svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg></button></div></div><div class="md:hidden block"><button class="fixed bottom-24 right-4 z-[90] w-11 h-11 flex items-center justify-center bg-white/60 dark:bg-slate-800/60 backdrop-blur-xl border border-white/40 dark:border-white/10 shadow-xl rounded-full text-slate-700 dark:text-slate-200 active:scale-90 transition-all" title="返回上一页"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-left" aria-hidden="true"><path d="m15 18-6-6 6-6"></path></svg></button></div><div class="hidden md:block"><canvas class="fixed inset-0 pointer-events-none z-[9999]"></canvas></div></div><style>
+              @keyframes gradientMove { 
+                0% { background-position: 0% 50%; } 
+                50% { background-position: 100% 50%; } 
+                100% { background-position: 0% 50%; } 
               }
-              return blob;
+            </style><audio src="/music/my-heart-will-go-on.flac"></audio><div class="hidden md:block"><div class="fixed bottom-20 right-20 z-[9999] flex flex-col items-center group cursor-grab active:cursor-grabbing" draggable="false" style="-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;touch-action:none"><div class="relative w-full flex justify-center mb-6"></div><div class="relative"><div class="absolute -left-12 top-1/2 -translate-y-1/2 flex flex-col gap-2 z-20"><button class="bg-white/90 dark:bg-slate-700/90 p-2.5 rounded-full shadow-md hover:scale-110 active:scale-95 transition-transform border border-gray-100 dark:border-slate-600 text-blue-500 hover:text-blue-600 flex items-center justify-center backdrop-blur-sm" title="聊天"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5"><path fill-rule="evenodd" d="M4.804 21.644A6.707 6.707 0 006 21.75a6.721 6.721 0 003.583-1.029c.774.182 1.584.279 2.417.279 5.322 0 9.75-3.97 9.75-9 0-5.03-4.428-9-9.75-9s-9.75 3.97-9.75 9c0 2.409 1.025 4.587 2.674 6.192.232.226.277.428.254.543a3.73 3.73 0 01-.814 1.686.75.75 0 00.44 1.223zM8.25 10.875a1.125 1.125 0 100 2.25 1.125 1.125 0 000-2.25zM10.875 12a1.125 1.125 0 112.25 0 1.125 1.125 0 01-2.25 0zm4.875-1.125a1.125 1.125 0 100 2.25 1.125 1.125 0 000-2.25z" clip-rule="evenodd"></path></svg></button><button class="bg-white/90 dark:bg-slate-700/90 p-2.5 rounded-full shadow-md hover:scale-110 active:scale-95 transition-transform border border-gray-100 dark:border-slate-600 flex items-center justify-center backdrop-blur-sm " title="喂小鱼干"><span class="text-xl leading-none">🐟</span></button></div><div class="w-[120px] h-[120px] relative cursor-pointer"><style>
+            .cat-sprite {
+              width: 100%;
+              height: 100%;
+              background-image: url('/siamese-cat.png'); 
+              background-size: 300% 300%; 
+              background-repeat: no-repeat;
+              image-rendering: pixelated; 
             }
-            chunks.push(result.value);
-            loaded += result.value.length;
-            if (total > 0) {
-              log('下载 ' + Math.round(loaded / total * 100) + '%');
+            .cat-idle {
+              animation: idle-frames 1.2s infinite;
+              background-position-y: 0%; 
             }
-            return pump();
-          });
-        }
-        return pump();
-      }).catch(function(err) {
-        log('下载失败: ' + err);
-        throw err;
-      });
-    }
-
-    fromCache().then(playBlob).catch(function() {
-      fetchAndCache().then(playBlob).catch(function(err) {
-        log('失败: ' + err);
-      });
-    });
-  }
-
-  // ---- Click/touch fallback ----
-  function onUser(e) {
-    if (started) return;
-    if (e && e.target && (e.target.tagName === 'A' || e.target.closest('a'))) return;
-    tryPlay('点击');
-  }
-  document.addEventListener('click', onUser);
-  document.addEventListener('touchstart', onUser);
-
-  // Start on DOM ready
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', loadVideo);
-  } else {
-    loadVideo();
-  }
-})();
-</script>
-<!-- hexo injector body_begin end -->
-  <div id="container">
-    <div class="left-col">
-    <div class="overlay"></div>
-<div class="intrude-less">
-    <header id="header" class="inner">
-        <script src="/js/jquery-3.6.4.min.js"></script>
-        <a href="/" class="profilepic">
-            <img src="/img/avatar-cat.png" class="js-avatar" style="width: 100%;height: 100%;opacity: 1;">        
-        </a>
-        <hgroup>
-          <h1 class="header-author"><a href="/">银河</a></h1>
-        </hgroup>
-        
-        
-            <form>
-                <input type="text" class="st-default-search-input search" id="local-search-input" placeholder="搜索一下" autocomplete="off">
-            </form>
-            <div id="local-search-result"></div>
-        
-        
-            <script type="text/javascript">
-                (function() {
-                    'use strict';
-                    function getMatchData(keyword, data) {
-                        var matchData = [];
-                        for(var i =0;i<data.length;i++){
-                            if(data[i].title.toLowerCase().indexOf(keyword)>=0) 
-                                matchData.push(data[i])
-                        }
-                        return matchData;
-                    }
-                    var $input = $('#local-search-input');
-                    var $resultContent = $('#local-search-result');
-                    $input.keyup(function(){
-                        $.ajax({
-                            url: '/search.json',
-                            dataType: "json",
-                            success: function( json ) {
-                                var str='<ul class=\"search-result-list\">';                
-                                var keyword = $input.val().trim().toLowerCase();
-                                $resultContent.innerHTML = "";
-                                if ($input.val().trim().length <= 0) {
-                                    $resultContent.empty();
-                                    $('#switch-area').show();
-                                    return;
-                                }
-                                var results = getMatchData(keyword, json);
-                                if(results.length === 0){
-                                    $resultContent.empty();
-                                    $('#switch-area').show();
-                                    return;
-                                } 
-                                for(var i =0; i<results.length; i++){
-                                    str += "<li><a href='"+ results[i].url +"' class='search-result-title'>"+ results[i].title +"</a></li>";
-                                }
-                                str += "</ul>";
-                                $resultContent.empty();
-                                $resultContent.append(str);
-                                $('#switch-area').hide();
-                            }
-                        });
-                    });
-                })();
-            </script>
-        
-        
-            <div id="switch-btn" class="switch-btn">
-                <div class="icon">
-                    <div class="icon-ctn">
-                        <div class="icon-wrap icon-house" data-idx="0">
-                            <div class="birdhouse"></div>
-                            <div class="birdhouse_holes"></div>
-                        </div>
-                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
-                            <div class="ribbon"></div>
-                        </div>
-                        
-                        <div class="icon-wrap icon-link hide" data-idx="2">
-                            <div class="loopback_l"></div>
-                            <div class="loopback_r"></div>
-                        </div>
-                        
-                        
-                        <div class="icon-wrap icon-me hide" data-idx="3">
-                            <div class="user"></div>
-                            <div class="shoulder"></div>
-                        </div>
-                        
-                    </div>
-                </div>
-                <div class="tips-box hide">
-                    <div class="tips-arrow"></div>
-                    <ul class="tips-inner">
-                        <li>菜单</li>
-                        <li>标签</li>
-                        
-                        <li>友情链接</li>
-                        
-                        
-                        <li>关于我</li>
-                        
-                    </ul>
-                </div>
-            </div>
-        
-        <div id="switch-area" class="switch-area">
-            <div class="switch-wrap">
-                <section class="switch-part switch-part1">
-                    <nav class="header-menu">
-                        <ul>
-                        
-                            <li><a  href="/">Home</a></li>
-                        
-                            <li><a  href="/archives">Archives</a></li>
-                        
-                            <li><a  href="/%E8%BF%8E%E6%96%B0%E9%9D%B6%E5%9C%BA/">迎新靶场</a></li>
-                        
-                            <li><a  href="/about">关于</a></li>
-                        
-                        </ul>
-                    </nav>
-                    <nav class="header-nav">
-                        <ul class="social">
-                            
-                                <a class="fl mail"  target="_blank" href="https://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=1529568270@qq.com" title="mail">mail</a>
-                            
-                        </ul>
-                    </nav>
-                </section>
-                
-                <section class="switch-part switch-part2">
-                    <div class="widget tagcloud" id="js-tagcloud">
-                        
-                    </div>
-                </section>
-                
-                
-                <section class="switch-part switch-part3">
-                    <div id="js-friends">
-                    
-                      <a target="_blank"  class="main-nav-link switch-friends-link" href="http://ring3.xyz/">Yllen</a>
-                    
-                      <a target="_blank"  class="main-nav-link switch-friends-link" href="http://mxny.org/">麦香浓郁</a>
-                    
-                      <a target="_blank"  class="main-nav-link switch-friends-link" href="http://whereisk0shl.top/">K0sh1</a>
-                    
-                      <a target="_blank"  class="main-nav-link switch-friends-link" href="http://www.ycjcl.cc/">信鑫</a>
-                    
-                      <a target="_blank"  class="main-nav-link switch-friends-link" href="http://bystudent.com/">ByStundet表哥</a>
-                    
-                      <a target="_blank"  class="main-nav-link switch-friends-link" href="https://www.jarviswang.me/">汪神_Jarvis</a>
-                    
-                      <a target="_blank"  class="main-nav-link switch-friends-link" href="http://sh3ll.me/">Chu</a>
-                    
-                      <a target="_blank"  class="main-nav-link switch-friends-link" href="https://www.hackfun.org/">4ido10n</a>
-                    
-                      <a target="_blank"  class="main-nav-link switch-friends-link" href="http://www.cnblogs.com/iamstudy">L3m0n</a>
-                    
-                      <a target="_blank"  class="main-nav-link switch-friends-link" href="http://o0xmuhe.me/">muhe</a>
-                    
-                      <a target="_blank"  class="main-nav-link switch-friends-link" href="http://blog.nuptzj.cn/">_画船听雨</a>
-                    
-                      <a target="_blank"  class="main-nav-link switch-friends-link" href="http://www.virzz.com/index.html">Virink</a>
-                    
-                      <a target="_blank"  class="main-nav-link switch-friends-link" href="http://www.sqlsec.com/">国光</a>
-                    
-                      <a target="_blank"  class="main-nav-link switch-friends-link" href="http://www.bodkin.ren/">老锥</a>
-                    
-                      <a target="_blank"  class="main-nav-link switch-friends-link" href="http://www.cizel.cn/">C1zel</a>
-                    
-                      <a target="_blank"  class="main-nav-link switch-friends-link" href="http://1phan.cc">1phan</a>
-                    
-                      <a target="_blank"  class="main-nav-link switch-friends-link" href="https://www.liuil.top/">liuil</a>
-                    
-                      <a target="_blank"  class="main-nav-link switch-friends-link" href="http://www.cnblogs.com/Ox9A82/">Ox9A82</a>
-                    
-                      <a target="_blank"  class="main-nav-link switch-friends-link" href="http://burnegg.com/">burnegg</a>
-                    
-                      <a target="_blank"  class="main-nav-link switch-friends-link" href="https://jwrsec.cn/">jwr-sec</a>
-                    
-                      <a target="_blank"  class="main-nav-link switch-friends-link" href="http://sudalover.cn/">苏打</a>
-                    
-                      <a target="_blank"  class="main-nav-link switch-friends-link" href="http://blog.binklac.com">VeroFess</a>
-                    
-                      <a target="_blank"  class="main-nav-link switch-friends-link" href="http://www.bendawang.site/">bendawang</a>
-                    
-                      <a target="_blank"  class="main-nav-link switch-friends-link" href="http://weeklyalgo.codes/">hook</a>
-                    
-                      <a target="_blank"  class="main-nav-link switch-friends-link" href="http://www.flier.net.cn/">Flier&#39;blog</a>
-                    
-                      <a target="_blank"  class="main-nav-link switch-friends-link" href="http://www.mutepig.club">mutepig</a>
-                    
-                      <a target="_blank"  class="main-nav-link switch-friends-link" href="https://blog.iret.xyz/list.aspx">Silver</a>
-                    
-                      <a target="_blank"  class="main-nav-link switch-friends-link" href="http://simp1e.leanote.com/">Simple</a>
-                    
-                      <a target="_blank"  class="main-nav-link switch-friends-link" href="http://processor.pub/">Processor</a>
-                    
-                    </div>
-                </section>
-                
-                
-                
-                <section class="switch-part switch-part4">
-                
-                    <div id="js-aboutme">一只淹死在二进制海洋里的二进制狗</div>
-                </section>
-                
-            </div>
-        </div>
-    </header>
-</div>
-
-    </div>
-    <div class="mid-col">
-      <nav id="mobile-nav">
-      <div class="overlay">
-          <div class="slider-trigger"></div>
-          <h1 class="header-author js-mobile-header hide"><a href="/" title="Me">银河</a></h1>
-      </div>
-    <div class="intrude-less">
-        <header id="header" class="inner">
-            <a href="/" class="profilepic">
-                
-                    <img lazy-src="/img/avatar-cat.png" class="js-avatar">
-                
-            </a>
-            <hgroup>
-              <h1 class="header-author"><a href="/" title="Me">银河</a></h1>
-            </hgroup>
-            
-            <nav class="header-menu">
-                <ul>
-                
-                    <li><a href="/">Home</a></li>
-                
-                    <li><a href="/archives">Archives</a></li>
-                
-                    <li><a href="/%E8%BF%8E%E6%96%B0%E9%9D%B6%E5%9C%BA/">迎新靶场</a></li>
-                
-                    <li><a href="/about">关于</a></li>
-                
-                <div class="clearfix"></div>
-                </ul>
-            </nav>
-            <nav class="header-nav">
-                <div class="social">
-                    
-                        <a class="mail" target="_blank" href="https://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=1529568270@qq.com" title="mail">mail</a>
-                    
-                </div>
-            </nav>
-        </header>                
-    </div>
-</nav>
-
-      <div class="body-wrap">
-  
-    <article id="post-欢迎来到我的博客" class="article article-type-post" itemscope itemprop="blogPost">
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2025/11/17/%E6%AC%A2%E8%BF%8E%E6%9D%A5%E5%88%B0%E6%88%91%E7%9A%84%E5%8D%9A%E5%AE%A2/">欢迎来到我的博客</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-        <h1 id="欢迎来到银河的博客！-🌌"><a href="#欢迎来到银河的博客！-🌌" class="headerlink" title="欢迎来到银河的博客！ 🌌"></a>欢迎来到银河的博客！ 🌌</h1><p>这是我的个人技术博客，主要分享CTF解题、技术学习和编程经验。</p>
-<h2 id="📚-最新内容"><a href="#📚-最新内容" class="headerlink" title="📚 最新内容"></a>📚 最新内容</h2><h3 id="🎯-迎新靶场-Writeup-合集"><a href="#🎯-迎新靶场-Writeup-合集" class="headerlink" title="🎯 迎新靶场 Writeup 合集"></a>🎯 <a href="/%E8%BF%8E%E6%96%B0%E9%9D%B6%E5%9C%BA/">迎新靶场 Writeup 合集</a></h3><ul>
-<li><a href="/%E8%BF%8E%E6%96%B0%E9%9D%B6%E5%9C%BA/Misc-%E6%97%A7%E6%97%B6%E7%9A%84%E5%8D%A1%E7%89%87/">旧时的卡片解题报告</a></li>
-</ul>
-<p>记录成长，分享知识！</p>
-
-      
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-
-      
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-
-  
-  
-</div>
-      <footer id="footer">
-    <div class="outer">
-        <div id="footer-info">
-            <div class="footer-left">
-                &copy; 2026 银河
-            </div>
-        </div>
-        
-            <div class="visit">
-                
-                    <span id="busuanzi_container_site_pv" style='display:none'>
-                        <span id="site-visit" >海贼到访数: 
-                            <span id="busuanzi_value_site_uv"></span>
-                        </span>
-                    </span>
-                
-                
-                    <span>, </span>
-                
-                
-                    <span id="busuanzi_container_page_pv" style='display:none'>
-                        <span id="page-visit">本页阅读量: 
-                            <span id="busuanzi_value_page_pv"></span>
-                        </span>
-                    </span>
-                
-            </div>
-        
-    </div>
-</footer>
-
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js"></script>
-
-<script src="/js/main.js"></script>
-
-
-    <script>
-        $(document).ready(function() {
-            var backgroundnum = 24;
-            var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
-            $("#mobile-nav").css({"background-image": backgroundimg,"background-size": "cover","background-position": "center"});
-        })
-    </script>
-
-
-
-
-
-<div class="scroll" id="scroll">
-    <a href="#"><i class="fa fa-arrow-up"></i></a>
-    <a href="#comments"><i class="fa fa-comments-o"></i></a>
-    <a href="#footer"><i class="fa fa-arrow-down"></i></a>
-</div>
-<script>
-    $(document).ready(function() {
-        if ($("#comments").length < 1) {
-            $("#scroll > a:nth-child(2)").hide();
-        };
-    })
-</script>
-
-
-<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
-</script>
-
-  <script language="javascript">
-    $(function() {
-        $("a[title]").each(function() {
-            var a = $(this);
-            var title = a.attr('title');
-            if (title == undefined || title == "") return;
-            a.data('title', title).removeAttr('title').hover(
-
-            function() {
-                var offset = a.offset();
-                $("<div id=\"anchortitlecontainer\"></div>").appendTo($("body")).html(title).css({
-                    top: offset.top - a.outerHeight() - 15,
-                    left: offset.left + a.outerWidth()/2 + 1
-                }).fadeIn(function() {
-                    var pop = $(this);
-                    setTimeout(function() {
-                        pop.remove();
-                    }, pop.text().length * 800);
-                });
-            }, function() {
-                $("#anchortitlecontainer").remove();
-            });
-        });
-    });
-</script>
-
-
-    <script type="text/javascript">
-      window.onload = function(){
-        document.getElementById("search").onclick = function(){
-            console.log("search")
-            search();
-        }
-      }
-      function search(){
-        (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
-        (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
-        e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
-        })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
-
-        _st('install','A1Pz-LKMXbrzcFg2FWi6','2.0.0');
-      }
-    </script>
-
-
-  </div>
-<!-- hexo injector body_end start -->
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    var searchInput = document.getElementById('local-search-input');
-    var resultBox = document.getElementById('local-search-result');
-    if (searchInput) {
-      searchInput.setAttribute('placeholder', '搜索一下');
-      searchInput.setAttribute('autocomplete', 'off');
-    }
-
-    if (!searchInput || !resultBox || !window.fetch) return;
-
-    var searchData = null;
-    var loading = null;
-
-    function escapeHtml(value) {
-      return String(value).replace(/[&<>"']/g, function (char) {
-        return {
-          '&': '&amp;',
-          '<': '&lt;',
-          '>': '&gt;',
-          '"': '&quot;',
-          "'": '&#39;'
-        }[char];
-      });
-    }
-
-    function loadSearchData() {
-      if (searchData) return Promise.resolve(searchData);
-      if (loading) return loading;
-      loading = fetch('/search.json')
-        .then(function (res) { return res.json(); })
-        .then(function (data) {
-          searchData = Array.isArray(data) ? data : [];
-          return searchData;
-        })
-        .catch(function () {
-          searchData = [];
-          return searchData;
-        });
-      return loading;
-    }
-
-    searchInput.addEventListener('input', function () {
-      var keyword = searchInput.value.trim().toLowerCase();
-      if (!keyword) {
-        resultBox.innerHTML = '';
-        return;
-      }
-
-      loadSearchData().then(function (data) {
-        var matches = data.filter(function (item) {
-          var haystack = [
-            item.title || '',
-            item.content || '',
-            Array.isArray(item.tags) ? item.tags.join(' ') : ''
-          ].join(' ').toLowerCase();
-          return haystack.indexOf(keyword) !== -1;
-        }).slice(0, 6);
-
-        if (!matches.length) {
-          resultBox.innerHTML = '';
-          return;
-        }
-
-        resultBox.innerHTML = '<ul class="search-result-list">' + matches.map(function (item) {
-          return '<li><a href="' + escapeHtml(item.url || '#') + '">' + escapeHtml(item.title || '未命名文章') + '</a></li>';
-        }).join('') + '</ul>';
-      });
-    });
-  });
-</script>
-
-<style>
-  #live2dcanvas {
-    right: 96px !important;
-    bottom: 48px !important;
-    z-index: 98 !important;
-    pointer-events: auto;
-    background: radial-gradient(circle at 50% 58%, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0) 62%) !important;
-    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.42));
-  }
-
-  @media (max-width: 768px) {
-    #live2dcanvas {
-      display: none !important;
-    }
-  }
-</style>
-<script>
-  (function () {
-    if (window.__yinheLive2dLoaded) return;
-    window.__yinheLive2dLoaded = true;
-
-    function initLive2D() {
-      if (!window.L2Dwidget) return;
-      window.L2Dwidget.init({
-        model: {
-          jsonPath: 'https://unpkg.com/live2d-widget-model-hijiki@1.0.5/assets/hijiki.model.json'
-        },
-        display: {
-          position: 'right',
-          width: 160,
-          height: 220,
-          hOffset: 96,
-          vOffset: 48
-        },
-        mobile: {
-          show: false
-        },
-        react: {
-          opacityDefault: 0.88,
-          opacityOnHover: 1
-        }
-      });
-    }
-
-    var script = document.createElement('script');
-    script.src = 'https://unpkg.com/live2d-widget@3.1.4/lib/L2Dwidget.min.js';
-    script.async = true;
-    script.onload = initLive2D;
-    document.body.appendChild(script);
-  })();
-</script>
-<!-- hexo injector body_end end --></body>
-</html>
+            .cat-petted {
+              animation: pet-frames 0.8s infinite;
+              background-position-y: 50%; 
+            }
+            .cat-thinking {
+              animation: idle-frames 0.6s infinite;
+              background-position-y: 0%; 
+            }
+            @keyframes idle-frames {
+              0%, 33.32% { background-position-x: 0%; }
+              33.33%, 66.65% { background-position-x: 50%; }
+              66.66%, 100% { background-position-x: 100%; }
+            }
+            @keyframes pet-frames {
+              0%, 49.99% { background-position-x: 0%; }
+              50%, 100% { background-position-x: 50%; }
+            }
+          </style><div class="cat-sprite drop-shadow-2xl cat-idle"></div></div></div></div></div></div><script src="/_next/static/chunks/0uvxhom03hg.7.js" id="_R_" async=""></script><script>(self.__next_f=self.__next_f||[]).push([0])</script><script>self.__next_f.push([1,"1:\"$Sreact.fragment\"\n2:I[29006,[\"/_next/static/chunks/08.znc8oafh1v.js\",\"/_next/static/chunks/0s9ya1l4qon8d.js\",\"/_next/static/chunks/0kkdkx8vkwq8~.js\"],\"ThemeProvider\"]\n3:I[84608,[\"/_next/static/chunks/08.znc8oafh1v.js\",\"/_next/static/chunks/0s9ya1l4qon8d.js\",\"/_next/static/chunks/0kkdkx8vkwq8~.js\"],\"default\"]\n4:I[7909,[\"/_next/static/chunks/08.znc8oafh1v.js\",\"/_next/static/chunks/0s9ya1l4qon8d.js\",\"/_next/static/chunks/0kkdkx8vkwq8~.js\"],\"MusicProvider\"]\n5:I[88308,[\"/_next/static/chunks/08.znc8oafh1v.js\",\"/_next/static/chunks/0s9ya1l4qon8d.js\",\"/_next/static/chunks/0kkdkx8vkwq8~.js\"],\"default\"]\n6:I[39116,[\"/_next/static/chunks/08.znc8oafh1v.js\",\"/_next/static/chunks/0s9ya1l4qon8d.js\",\"/_next/static/chunks/0kkdkx8vkwq8~.js\"],\"default\"]\n7:I[2205,[\"/_next/static/chunks/08.znc8oafh1v.js\",\"/_next/static/chunks/0s9ya1l4qon8d.js\",\"/_next/static/chunks/0kkdkx8vkwq8~.js\"],\"default\"]\n8:I[31703,[\"/_next/static/chunks/08.znc8oafh1v.js\",\"/_next/static/chunks/0s9ya1l4qon8d.js\",\"/_next/static/chunks/0kkdkx8vkwq8~.js\"],\"default\"]\n9:I[42352,[\"/_next/static/chunks/08.znc8oafh1v.js\",\"/_next/static/chunks/0s9ya1l4qon8d.js\",\"/_next/static/chunks/0kkdkx8vkwq8~.js\"],\"default\"]\n14:I[85538,[\"/_next/static/chunks/08.znc8oafh1v.js\",\"/_next/static/chunks/0s9ya1l4qon8d.js\",\"/_next/static/chunks/0kkdkx8vkwq8~.js\"],\"default\",1]\n:HL[\"/_next/static/chunks/0tmg9vcbw.fm2.css\",\"style\"]\n:HL[\"/_next/static/chunks/066jf0nk75nic.css\",\"style\"]\n:HL[\"/_next/static/chunks/0~ydk.tni6snc.css\",\"style\"]\n:HL[\"/_next/static/chunks/0x6pu1naly4g4.css\",\"style\"]\n:HL[\"/_next/static/media/797e433ab948586e-s.p.08e28id.o-okb.woff2\",\"font\",{\"crossOrigin\":\"\",\"type\":\"font/woff2\"}]\n:HL[\"/_next/static/media/caa3a2e1cccd8315-s.p.09~u27dqhyhd6.woff2\",\"font\",{\"crossOrigin\":\"\",\"type\":\"font/woff2\"}]\n:HL[\"/_next/static/media/f112ed7f0b91582f-s.p.0xqqmnf1a3x8p.woff2\",\"font\",{\"crossOrigin\":\"\",\"type\":\"font/woff2\"}]\n"])</script><script>self.__next_f.push([1,"0:{\"P\":null,\"c\":[\"\",\"\"],\"q\":\"\",\"i\":false,\"f\":[[[\"\",{\"children\":[\"__PAGE__\",{}]},\"$undefined\",\"$undefined\",16],[[\"$\",\"$1\",\"c\",{\"children\":[[[\"$\",\"link\",\"0\",{\"rel\":\"stylesheet\",\"href\":\"/_next/static/chunks/0tmg9vcbw.fm2.css\",\"precedence\":\"next\",\"crossOrigin\":\"$undefined\",\"nonce\":\"$undefined\"}],[\"$\",\"link\",\"1\",{\"rel\":\"stylesheet\",\"href\":\"/_next/static/chunks/066jf0nk75nic.css\",\"precedence\":\"next\",\"crossOrigin\":\"$undefined\",\"nonce\":\"$undefined\"}],[\"$\",\"link\",\"2\",{\"rel\":\"stylesheet\",\"href\":\"/_next/static/chunks/0~ydk.tni6snc.css\",\"precedence\":\"next\",\"crossOrigin\":\"$undefined\",\"nonce\":\"$undefined\"}],[\"$\",\"link\",\"3\",{\"rel\":\"stylesheet\",\"href\":\"/_next/static/chunks/0x6pu1naly4g4.css\",\"precedence\":\"next\",\"crossOrigin\":\"$undefined\",\"nonce\":\"$undefined\"}],[\"$\",\"script\",\"script-0\",{\"src\":\"/_next/static/chunks/08.znc8oafh1v.js\",\"async\":true,\"nonce\":\"$undefined\"}],[\"$\",\"script\",\"script-1\",{\"src\":\"/_next/static/chunks/0s9ya1l4qon8d.js\",\"async\":true,\"nonce\":\"$undefined\"}],[\"$\",\"script\",\"script-2\",{\"src\":\"/_next/static/chunks/0kkdkx8vkwq8~.js\",\"async\":true,\"nonce\":\"$undefined\"}]],[\"$\",\"html\",null,{\"lang\":\"zh-CN\",\"className\":\"geist_a71539c9-module__T19VSG__variable geist_mono_8d43a2aa-module__8Li5zG__variable noto_serif_sc_4b5b2b75-module__o_XRgq__variable h-full antialiased\",\"suppressHydrationWarning\":true,\"children\":[[\"$\",\"head\",null,{\"children\":[[\"$\",\"style\",null,{\"suppressHydrationWarning\":true,\"dangerouslySetInnerHTML\":{\"__html\":\"\\n              #app-mount-root { opacity: 0; visibility: hidden; pointer-events: none; }\\n              html.splash-seen #app-mount-root { opacity: 1 !important; visibility: visible !important; pointer-events: auto !important; }\\n            \"}}],[\"$\",\"script\",null,{\"suppressHydrationWarning\":true,\"dangerouslySetInnerHTML\":{\"__html\":\"\\n              try {\\n                if (sessionStorage.getItem('hasSeenSplash') === 'true') {\\n                  document.documentElement.classList.add('splash-seen');\\n                }\\n              } catch (e) {}\\n            \"}}]]}],[\"$\",\"body\",null,{\"className\":\"w-screen overflow-x-hidden min-h-full flex flex-col relative transition-colors duration-1000 bg-slate-50 dark:bg-slate-950 font-serif\",\"children\":[\"$\",\"$L2\",null,{\"children\":[[\"$\",\"$L3\",null,{}],[\"$\",\"$L4\",null,{\"children\":[[\"$\",\"div\",null,{\"id\":\"app-mount-root\",\"className\":\"flex-1 flex flex-col transition-opacity duration-1000\",\"children\":[[\"$\",\"div\",null,{\"className\":\"fixed inset-0 z-[-1] pointer-events-none overflow-hidden\",\"children\":[[\"$\",\"$L5\",null,{\"src\":\"/video/bg.mp4\",\"poster\":\"/bg-video-poster.jpg\"}],[\"$\",\"div\",null,{\"className\":\"absolute inset-0 z-[-9] bg-white/30 dark:bg-slate-900/40 backdrop-blur-md transition-colors duration-1000\"}],[\"$\",\"div\",null,{\"className\":\"absolute inset-0 z-[-8] opacity-60 dark:opacity-20 mix-blend-color transition-opacity duration-1000 transform-gpu\",\"style\":{\"background\":\"linear-gradient(-45deg, #a18cd1, #fbc2eb, #a1c4fd, #c2e9fb)\",\"backgroundSize\":\"400% 400%\",\"animation\":\"gradientMove 15s ease infinite\"}}],[\"$\",\"div\",null,{\"className\":\"absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-white/40 dark:bg-indigo-900/20 blur-[100px] rounded-full z-[-7] md:mix-blend-overlay\"}],[\"$\",\"div\",null,{\"className\":\"absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-indigo-400/30 dark:bg-purple-900/30 blur-[100px] rounded-full z-[-7] md:mix-blend-overlay\"}],[\"$\",\"div\",null,{\"className\":\"hidden md:block absolute inset-0 w-full h-full\",\"children\":[\"$\",\"$L6\",null,{}]}]]}],[\"$\",\"div\",null,{\"className\":\"hidden md:block\",\"children\":[\"$\",\"$L7\",null,{}]}],[\"$\",\"div\",null,{\"className\":\"relative z-10 flex-1 flex flex-col\",\"children\":[\"$\",\"$L8\",null,{\"parallelRouterKey\":\"children\",\"error\":\"$undefined\",\"errorStyles\":\"$undefined\",\"errorScripts\":\"$undefined\",\"template\":[\"$\",\"$L9\",null,{}],\"templateStyles\":\"$undefined\",\"templateScripts\":\"$undefined\",\"notFound\":[[[\"$\",\"title\",null,{\"children\":\"404: This page could not be found.\"}],[\"$\",\"div\",null,{\"style\":{\"fontFamily\":\"system-ui,\\\"Segoe UI\\\",Roboto,Helvetica,Arial,sans-serif,\\\"Apple Color Emoji\\\",\\\"Segoe UI Emoji\\\"\",\"height\":\"100vh\",\"textAlign\":\"center\",\"display\":\"flex\",\"flexDirection\":\"column\",\"alignItems\":\"center\",\"justifyContent\":\"center\"},\"children\":[\"$\",\"div\",null,{\"children\":[[\"$\",\"style\",null,{\"dangerouslySetInnerHTML\":{\"__html\":\"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}\"}}],\"$La\",\"$Lb\"]}]}]],[]],\"forbidden\":\"$undefined\",\"unauthorized\":\"$undefined\"}]}],\"$Lc\",\"$Ld\",\"$Le\",\"$Lf\"]}],\"$L10\"]}],\"$L11\"]}]}]]}]]}],{\"children\":[\"$L12\",{},null,false,null]},null,false,null],\"$L13\",false]],\"m\":\"$undefined\",\"G\":[\"$14\",[\"$L15\",\"$L16\",\"$L17\",\"$L18\"]],\"S\":true,\"h\":null,\"s\":\"$undefined\",\"l\":\"$undefined\",\"p\":\"$undefined\",\"d\":\"$undefined\",\"b\":\"P4NuOcaQIDndtYeJefIO5\"}\n"])</script><script>self.__next_f.push([1,"19:I[25243,[\"/_next/static/chunks/08.znc8oafh1v.js\",\"/_next/static/chunks/0s9ya1l4qon8d.js\",\"/_next/static/chunks/0kkdkx8vkwq8~.js\"],\"default\"]\n1a:I[49059,[\"/_next/static/chunks/08.znc8oafh1v.js\",\"/_next/static/chunks/0s9ya1l4qon8d.js\",\"/_next/static/chunks/0kkdkx8vkwq8~.js\"],\"default\"]\n1b:I[43680,[\"/_next/static/chunks/08.znc8oafh1v.js\",\"/_next/static/chunks/0s9ya1l4qon8d.js\",\"/_next/static/chunks/0kkdkx8vkwq8~.js\"],\"default\"]\n1c:I[16403,[\"/_next/static/chunks/08.znc8oafh1v.js\",\"/_next/static/chunks/0s9ya1l4qon8d.js\",\"/_next/static/chunks/0kkdkx8vkwq8~.js\"],\"default\"]\n1d:I[42315,[\"/_next/static/chunks/08.znc8oafh1v.js\",\"/_next/static/chunks/0s9ya1l4qon8d.js\",\"/_next/static/chunks/0kkdkx8vkwq8~.js\"],\"default\"]\n1e:I[86935,[\"/_next/static/chunks/08.znc8oafh1v.js\",\"/_next/static/chunks/0s9ya1l4qon8d.js\",\"/_next/static/chunks/0kkdkx8vkwq8~.js\",\"/_next/static/chunks/0-fvc0uzqms2d.js\"],\"ToastProvider\"]\n1f:I[41538,[\"/_next/static/chunks/08.znc8oafh1v.js\",\"/_next/static/chunks/0s9ya1l4qon8d.js\",\"/_next/static/chunks/0kkdkx8vkwq8~.js\",\"/_next/static/chunks/0-fvc0uzqms2d.js\"],\"default\"]\n20:I[25167,[\"/_next/static/chunks/08.znc8oafh1v.js\",\"/_next/static/chunks/0s9ya1l4qon8d.js\",\"/_next/static/chunks/0kkdkx8vkwq8~.js\",\"/_next/static/chunks/0-fvc0uzqms2d.js\"],\"default\"]\n21:I[75333,[\"/_next/static/chunks/08.znc8oafh1v.js\",\"/_next/static/chunks/0s9ya1l4qon8d.js\",\"/_next/static/chunks/0kkdkx8vkwq8~.js\",\"/_next/static/chunks/0-fvc0uzqms2d.js\"],\"default\"]\n22:I[52648,[\"/_next/static/chunks/08.znc8oafh1v.js\",\"/_next/static/chunks/0s9ya1l4qon8d.js\",\"/_next/static/chunks/0kkdkx8vkwq8~.js\",\"/_next/static/chunks/0-fvc0uzqms2d.js\"],\"default\"]\n23:I[47304,[\"/_next/static/chunks/08.znc8oafh1v.js\",\"/_next/static/chunks/0s9ya1l4qon8d.js\",\"/_next/static/chunks/0kkdkx8vkwq8~.js\",\"/_next/static/chunks/0-fvc0uzqms2d.js\"],\"default\"]\n24:I[93955,[\"/_next/static/chunks/08.znc8oafh1v.js\",\"/_next/static/chunks/0s9ya1l4qon8d.js\",\"/_next/static/chunks/0kkdkx8vkwq8~.js\",\"/_next/static/chunks/0-fvc0uzqms2d.js\"],\"default\"]\n25:I[40583,[\"/_next/static/chunks/08.znc8oafh1v.js\",\"/_next/static/chunks/0s9ya1l4qon8d.js\",\"/_next/static/chunks/0kkdkx8vkwq8~.js\",\"/_next/static/chunks/0-fvc0uzqms2d.js\"],\"default\"]\n26:I[65144,[\"/_next/static/chunks/08.znc8oafh1v.js\",\"/_next/static/chunks/0s9ya1l4qon8d.js\",\"/_next/static/chunks/0kkdkx8vkwq8~.js\",\"/_next/static/chunks/0-fvc0uzqms2d.js\"],\"\"]\n27:I[97931,[\"/_next/static/chunks/08.znc8oafh1v.js\",\"/_next/static/chunks/0s9ya1l4qon8d.js\",\"/_next/static/chunks/0kkdkx8vkwq8~.js\",\"/_next/static/chunks/0-fvc0uzqms2d.js\"],\"default\"]\n28:I[6239,[\"/_next/static/chunks/08.znc8oafh1v.js\",\"/_next/static/chunks/0s9ya1l4qon8d.js\",\"/_next/static/chunks/0kkdkx8vkwq8~.js\",\"/_next/static/chunks/0-fvc0uzqms2d.js\"],\"default\"]\n29:I[10424,[\"/_next/static/chunks/08.znc8oafh1v.js\",\"/_next/static/chunks/0s9ya1l4qon8d.js\",\"/_next/static/chunks/0kkdkx8vkwq8~.js\",\"/_next/static/chunks/0-fvc0uzqms2d.js\"],\"default\"]\n2a:I[81466,[\"/_next/static/chunks/08.znc8oafh1v.js\",\"/_next/static/chunks/0s9ya1l4qon8d.js\",\"/_next/static/chunks/0kkdkx8vkwq8~.js\"],\"OutletBoundary\"]\n2b:\"$Sreact.suspense\"\n2d:I[81466,[\"/_next/static/chunks/08.znc8oafh1v.js\",\"/_next/static/chunks/0s9ya1l4qon8d.js\",\"/_next/static/chunks/0kkdkx8vkwq8~.js\"],\"ViewportBoundary\"]\n2f:I[81466,[\"/_next/static/chunks/08.znc8oafh1v.js\",\"/_next/static/chunks/0s9ya1l4qon8d.js\",\"/_next/static/chunks/0kkdkx8vkwq8~.js\"],\"MetadataBoundary\"]\n:HL[\"/bg-video-poster.jpg\",\"image\"]\na:[\"$\",\"h1\",null,{\"className\":\"next-error-h1\",\"style\":{\"display\":\"inline-block\",\"margin\":\"0 20px 0 0\",\"padding\":\"0 23px 0 0\",\"fontSize\":24,\"fontWeight\":500,\"verticalAlign\":\"top\",\"lineHeight\":\"49px\"},\"children\":404}]\nb:[\"$\",\"div\",null,{\"style\":{\"display\":\"inline-block\"},\"children\":[\"$\",\"h2\",null,{\"style\":{\"fontSize\":14,\"fontWeight\":400,\"lineHeight\":\"49px\",\"margin\":0},\"children\":\"This page could not be found.\"}]}]\nc:[\"$\",\"div\",null,{\"className\":\"hidden md:block\",\"children\":[\"$\",\"$L19\",null,{}]}]\nd:[\"$\",\"div\",null,{\"className\":\"hidden md:block\",\"children\":[\"$\",\"$L1a\",null,{}]}]\ne:[\"$\",\"div\",null,{\"className\":\"md:hidden block\",\"children\":[\"$\",\"$L1b\",n"])</script><script>self.__next_f.push([1,"ull,{}]}]\nf:[\"$\",\"div\",null,{\"className\":\"hidden md:block\",\"children\":[\"$\",\"$L1c\",null,{}]}]\n10:[\"$\",\"style\",null,{\"suppressHydrationWarning\":true,\"dangerouslySetInnerHTML\":{\"__html\":\"\\n              @keyframes gradientMove { \\n                0% { background-position: 0% 50%; } \\n                50% { background-position: 100% 50%; } \\n                100% { background-position: 0% 50%; } \\n              }\\n            \"}}]\n11:[\"$\",\"div\",null,{\"className\":\"hidden md:block\",\"children\":[\"$\",\"$L1d\",null,{}]}]\n"])</script><script>self.__next_f.push([1,"12:[\"$\",\"$1\",\"c\",{\"children\":[[\"$\",\"$L1e\",null,{\"children\":[\"$\",\"div\",null,{\"className\":\"min-h-screen relative pb-10\",\"children\":[[\"$\",\"$L1f\",null,{}],[\"$\",\"$L20\",null,{\"children\":[\"$\",\"div\",null,{\"className\":\"w-full max-w-6xl mx-auto mt-24 sm:mt-28 px-4 sm:px-6 lg:px-10 relative z-10\",\"children\":[[\"$\",\"$L21\",null,{\"posts\":[{\"slug\":\"welcome\",\"title\":\"欢迎来到银河的博客\",\"date\":\"2025-11-17 21:00:00\",\"description\":\"记录 CTF 解题、技术学习和编程经验。\",\"cover\":\"/covers/welcome-starry-mirror.jpg\",\"tags\":[\"CTF\",\"技术学习\",\"博客\"],\"content\":\"\\n# 欢迎来到银河的博客！\\n\\n这是我的个人技术博客，主要分享 CTF 解题、技术学习和编程经验。\\n\\n## 最新内容\\n\\n### 迎新靶场 Writeup 合集\\n\\n- [旧时的卡片解题报告](/迎新靶场/Misc-旧时的卡片/)\\n\\n记录成长，分享知识。\\n\",\"formattedDate\":\"2025.11.17 21:00\"}]}],[\"$\",\"main\",null,{\"className\":\"flex flex-col gap-6 w-full mt-6\",\"children\":[[\"$\",\"div\",null,{\"className\":\"grid grid-cols-1 lg:grid-cols-12 gap-6 w-full\",\"children\":[[\"$\",\"div\",null,{\"className\":\"col-span-1 lg:col-span-7 flex flex-col\",\"children\":[\"$\",\"$L22\",null,{\"postCount\":1,\"chatterCount\":1,\"photoCount\":2}]}],[\"$\",\"div\",null,{\"className\":\"col-span-1 lg:col-span-5 flex flex-col\",\"children\":[\"$\",\"$L23\",null,{}]}]]}],[\"$\",\"div\",null,{\"className\":\"w-full mt-[-10px]\",\"children\":[\"$\",\"$L24\",null,{}]}],[\"$\",\"div\",null,{\"className\":\"grid grid-cols-1 lg:grid-cols-12 gap-6 w-full\",\"children\":[[\"$\",\"div\",null,{\"className\":\"col-span-1 lg:col-span-4 flex flex-col min-h-[300px]\",\"children\":[\"$\",\"$L25\",null,{\"posts\":[\"$12:props:children:0:props:children:props:children:1:props:children:props:children:0:props:posts:0\"]}]}],[\"$\",\"div\",null,{\"className\":\"col-span-1 lg:col-span-8 flex flex-col gap-6\",\"children\":[[\"$\",\"$L26\",null,{\"href\":\"/photowall\",\"className\":\"w-full rounded-3xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-xl overflow-hidden transition-all duration-700 hover:scale-[1.02] relative group min-h-[200px] sm:min-h-[220px] flex-shrink-0\",\"children\":[[\"$\",\"img\",null,{\"src\":\"/bg-video-poster.jpg\",\"className\":\"w-full h-full absolute inset-0 object-cover transition-transform duration-700 group-hover:scale-105 opacity-90\"}],[\"$\",\"div\",null,{\"className\":\"absolute inset-0 bg-black/30 dark:bg-black/50 group-hover:bg-black/10 transition-colors duration-500\"}],[\"$\",\"div\",null,{\"className\":\"absolute bottom-4 left-4 sm:bottom-6 sm:left-6 right-6\",\"children\":[[\"$\",\"h3\",null,{\"className\":\"text-2xl sm:text-3xl font-bold text-white mb-1 sm:mb-2 underline decoration-pink-400\",\"children\":\"博客背景\"}],[\"$\",\"p\",null,{\"className\":\"text-white/90 text-sm sm:text-lg line-clamp-1\",\"children\":\"给博客留一块安静的视觉角落。\"}]]}]]}],[\"$\",\"div\",null,{\"className\":\"grid grid-cols-1 sm:grid-cols-3 gap-6 w-full flex-1\",\"children\":[[\"$\",\"div\",null,{\"className\":\"sm:col-span-2 flex flex-col min-h-[200px]\",\"children\":[\"$\",\"$L27\",null,{\"chatters\":[{\"slug\":\"blog-theme-switch\",\"title\":\"博客主题切换记录\",\"description\":\"把博客迁移到 XHBlogs 风格。\",\"cover\":\"/covers/chatter-blog-theme.jpg\",\"date\":\"2026-09-14 20:00:00\",\"formattedDate\":\"2026.09.14 20:00\"}]}]}],[\"$\",\"div\",null,{\"className\":\"sm:col-span-1 flex flex-col min-h-[120px]\",\"children\":[\"$\",\"$L28\",null,{}]}]]}]]}]]}],[\"$\",\"div\",null,{\"className\":\"w-full mt-4\",\"children\":[\"$\",\"$L29\",null,{}]}]]}]]}]}]]}]}],[[\"$\",\"script\",\"script-0\",{\"src\":\"/_next/static/chunks/0-fvc0uzqms2d.js\",\"async\":true,\"nonce\":\"$undefined\"}]],[\"$\",\"$L2a\",null,{\"children\":[\"$\",\"$2b\",null,{\"name\":\"Next.MetadataOutlet\",\"children\":\"$@2c\"}]}]]}]\n"])</script><script>self.__next_f.push([1,"13:[\"$\",\"$1\",\"h\",{\"children\":[null,[\"$\",\"$L2d\",null,{\"children\":\"$L2e\"}],[\"$\",\"div\",null,{\"hidden\":true,\"children\":[\"$\",\"$L2f\",null,{\"children\":[\"$\",\"$2b\",null,{\"name\":\"Next.Metadata\",\"children\":\"$L30\"}]}]}],[\"$\",\"meta\",null,{\"name\":\"next-size-adjust\",\"content\":\"\"}]]}]\n15:[\"$\",\"link\",\"0\",{\"rel\":\"stylesheet\",\"href\":\"/_next/static/chunks/0tmg9vcbw.fm2.css\",\"precedence\":\"next\",\"crossOrigin\":\"$undefined\",\"nonce\":\"$undefined\"}]\n16:[\"$\",\"link\",\"1\",{\"rel\":\"stylesheet\",\"href\":\"/_next/static/chunks/066jf0nk75nic.css\",\"precedence\":\"next\",\"crossOrigin\":\"$undefined\",\"nonce\":\"$undefined\"}]\n17:[\"$\",\"link\",\"2\",{\"rel\":\"stylesheet\",\"href\":\"/_next/static/chunks/0~ydk.tni6snc.css\",\"precedence\":\"next\",\"crossOrigin\":\"$undefined\",\"nonce\":\"$undefined\"}]\n18:[\"$\",\"link\",\"3\",{\"rel\":\"stylesheet\",\"href\":\"/_next/static/chunks/0x6pu1naly4g4.css\",\"precedence\":\"next\",\"crossOrigin\":\"$undefined\",\"nonce\":\"$undefined\"}]\n"])</script><script>self.__next_f.push([1,"2e:[[\"$\",\"meta\",\"0\",{\"charSet\":\"utf-8\"}],[\"$\",\"meta\",\"1\",{\"name\":\"viewport\",\"content\":\"width=device-width, initial-scale=1\"}]]\n"])</script><script>self.__next_f.push([1,"31:I[21905,[\"/_next/static/chunks/08.znc8oafh1v.js\",\"/_next/static/chunks/0s9ya1l4qon8d.js\",\"/_next/static/chunks/0kkdkx8vkwq8~.js\"],\"IconMark\"]\n2c:null\n30:[[\"$\",\"title\",\"0\",{\"children\":\"银河的博客\"}],[\"$\",\"meta\",\"1\",{\"name\":\"description\",\"content\":\"记录 CTF 解题、技术学习和编程经验。慢慢写，慢慢变强。\"}],[\"$\",\"link\",\"2\",{\"rel\":\"icon\",\"href\":\"/avatar-cat.png\"}],[\"$\",\"link\",\"3\",{\"rel\":\"apple-touch-icon\",\"href\":\"/avatar-cat.png\"}],[\"$\",\"$L31\",\"4\",{}]]\n"])</script></body></html>

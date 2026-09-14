@@ -1,0 +1,8 @@
+1:"$Sreact.fragment"
+2:I[41538,["/_next/static/chunks/08.znc8oafh1v.js","/_next/static/chunks/0s9ya1l4qon8d.js","/_next/static/chunks/0kkdkx8vkwq8~.js","/_next/static/chunks/0jvo8s.qvqeax.js"],"default"]
+3:I[25167,["/_next/static/chunks/08.znc8oafh1v.js","/_next/static/chunks/0s9ya1l4qon8d.js","/_next/static/chunks/0kkdkx8vkwq8~.js","/_next/static/chunks/0jvo8s.qvqeax.js"],"default"]
+4:I[39353,["/_next/static/chunks/08.znc8oafh1v.js","/_next/static/chunks/0s9ya1l4qon8d.js","/_next/static/chunks/0kkdkx8vkwq8~.js","/_next/static/chunks/0jvo8s.qvqeax.js"],"default"]
+5:I[81466,["/_next/static/chunks/08.znc8oafh1v.js","/_next/static/chunks/0s9ya1l4qon8d.js","/_next/static/chunks/0kkdkx8vkwq8~.js"],"OutletBoundary"]
+6:"$Sreact.suspense"
+0:{"rsc":["$","$1","c",{"children":[["$","div",null,{"className":"min-h-screen relative pb-10","children":[["$","$L2",null,{}],["$","$L3",null,{"children":["$","$L4",null,{"chatters":[{"slug":"blog-theme-switch","title":"博客主题切换记录","date":"2026-09-14 20:00:00","tags":["博客","主题"],"mood":"折腾中","cover":"/covers/chatter-blog-theme.jpg","content":"\n今天把博客换成了 XHBlogs 的毛玻璃风格。\n\n先本地看效果，确认排版和细节舒服之后，再考虑部署上线。\n"}]}]}]]}],[["$","script","script-0",{"src":"/_next/static/chunks/0jvo8s.qvqeax.js","async":true}]],["$","$L5",null,{"children":["$","$6",null,{"name":"Next.MetadataOutlet","children":"$@7"}]}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"P4NuOcaQIDndtYeJefIO5"}
+7:null
