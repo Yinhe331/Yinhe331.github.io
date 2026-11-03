@@ -135,6 +135,33 @@
 
         #toast { position: absolute; bottom: 8%; left: 50%; transform: translateX(-50%); max-width: 82vw; background: rgba(10,10,10,.82); border: 1px solid rgba(212,175,55,.5); color: #d4af37; padding: 10px 24px; border-radius: 22px; font-size: 13px; letter-spacing: .12em; z-index: 300; opacity: 0; transition: opacity .4s; pointer-events: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
+        /* ---------- 手势互动入口 ---------- */
+        #gesture-cta {
+            position: absolute;
+            bottom: calc(28px + env(safe-area-inset-bottom, 0px));
+            left: 50%; transform: translateX(-50%);
+            z-index: 60; pointer-events: auto;
+            display: flex; align-items: center; gap: 10px;
+            background: rgba(10, 10, 10, 0.68);
+            border: 1px solid rgba(212, 175, 55, 0.55);
+            color: #d4af37;
+            font-family: 'Cinzel', serif; font-size: 15px; font-weight: 600; letter-spacing: .15em;
+            white-space: nowrap;
+            padding: 13px 28px; border-radius: 28px;
+            cursor: pointer;
+            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+            transition: opacity .5s ease, background .3s ease, color .3s ease;
+            animation: ctaPulse 2.6s ease-in-out infinite;
+        }
+        #gesture-cta .cta-icon { font-size: 18px; }
+        #gesture-cta:hover { background: rgba(212, 175, 55, 0.2); color: #fff; }
+        #gesture-cta:active { transform: translateX(-50%) scale(0.96); }
+        #gesture-cta.hidden { opacity: 0; pointer-events: none; }
+        @keyframes ctaPulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.35); }
+            50% { box-shadow: 0 0 20px 5px rgba(212, 175, 55, 0.22); }
+        }
+
         /* ---------- 移动端适配 ---------- */
         @media (max-width: 768px) {
             #menu-toggle { display: flex; }
@@ -198,7 +225,6 @@
                 <button id="btn-export" class="control-btn">导出网页</button>
                 <button id="btn-fullscreen" class="control-btn">全屏显示</button>
                 <button id="btn-switch-theme" class="control-btn">颜色切换</button>
-                <button id="btn-gesture" class="control-btn">开启手势</button>
             </div>
         </div>
         <input type="file" id="file-input" multiple accept="image/*">
@@ -226,6 +252,9 @@
         <video id="webcam" autoplay playsinline webkit-playsinline></video>
         <canvas id="webcam-preview"></canvas>
     </div>
+
+    <!-- 手势互动入口：点击时主动申请摄像头权限（浏览器要求用户操作后才会弹权限窗） -->
+    <button id="gesture-cta"><span class="cta-icon">✋</span>开启手势互动</button>
 
     <div id="toast"></div>
 
@@ -268,11 +297,11 @@
         import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 
         /* ================================================================
-         * 设备分级：手机端降低粒子数量 / 像素比，桌面端全量
+         * 设备适配：粒子数量/画质全平台一致（InstancedMesh + GPU 粒子足够快），
+         * 仅交互方式与 UI 布局随设备变化；性能不足时靠帧率自适应降像素比兜底
          * ================================================================ */
         const IS_TOUCH = window.matchMedia('(pointer: coarse)').matches || 'ontouchstart' in window;
         const IS_MOBILE = IS_TOUCH || window.innerWidth < 768;
-        const LOW_END = IS_MOBILE || (navigator.hardwareConcurrency || 8) <= 4;
 
         const CONFIG = {
             colors: {
@@ -286,11 +315,7 @@
                 barbieSoft: 0xffb7c5,
                 barbieViolet: 0xd461e3
             },
-            particles: LOW_END ? {
-                count: 1100, dustCount: 1000, sparkleCount: 170,
-                treeHeight: 28, treeRadius: 9,
-                snowCount: 1500, snowSpeed: 10, galaxyCount: 2400, heartCount: 1100
-            } : {
+            particles: {
                 count: 2200, dustCount: 1900, sparkleCount: 330,
                 treeHeight: 28, treeRadius: 9,
                 snowCount: 2600, snowSpeed: 10, galaxyCount: 3800, heartCount: 1600
@@ -325,7 +350,7 @@
 
         let handLandmarker, video, drawingUtils, canvasCtx;
         let texLib = {}, matLib = {};
-        let DPR_CAP = Math.min(window.devicePixelRatio || 1, IS_MOBILE ? 1.75 : 2);
+        let DPR_CAP = Math.min(window.devicePixelRatio || 1, 2);
         let _lastW = 0, _lastH = 0;
 
         const _tempVec = new THREE.Vector3();
@@ -361,16 +386,7 @@
                 onResize();
                 bakeBaseOpacity();
 
-                // 全平台自动开启手势识别（缩放/看照片/换颜色）；失败时手机端提供手动重试按钮
-                initMediaPipe().then(ok => {
-                    if (!ok && IS_MOBILE) {
-                        const b = document.getElementById('btn-gesture');
-                        b.style.display = 'block';
-                        b.textContent = '开启手势';
-                        b.classList.remove('disabled');
-                        b.dataset.state = 'off';
-                    }
-                }).catch(console.warn);
+                // 手势识别由底部"开启手势互动"按钮触发（浏览器要求用户操作后才会弹摄像头权限窗）
 
                 window.__xtreeReady = true;
                 const loader = document.getElementById('loader');
@@ -437,10 +453,10 @@
         }
 
         function setupPostProcessing() {
-            // 桌面端开启 4x MSAA，画面边缘更干净；移动端关闭省性能
+            // 全平台开启 4x MSAA，画面边缘更干净
             const size = renderer.getDrawingBufferSize(new THREE.Vector2());
             const rt = new THREE.WebGLRenderTarget(size.x, size.y, {
-                samples: IS_MOBILE ? 0 : 4,
+                samples: 4,
                 type: THREE.HalfFloatType
             });
             composer = new EffectComposer(renderer, rt);
@@ -1451,8 +1467,23 @@
         }
 
         /* ================================================================
-         * 手势识别（MediaPipe 按需加载：手机端点按钮才加载）
+         * 手势识别（MediaPipe）：由"开启手势互动"按钮触发（需要用户操作才弹权限窗）
          * ================================================================ */
+        let gestureInitPromise = null;
+        function startGesture() {
+            // 防止重复初始化（权限窗挂起时用户再点重试，不会创建多个摄像头流）
+            if (!gestureInitPromise) {
+                gestureInitPromise = initMediaPipe().then(ok => {
+                    if (ok !== true) gestureInitPromise = null; // 失败允许重试
+                    return ok;
+                }).catch(err => {
+                    gestureInitPromise = null;
+                    throw err;
+                });
+            }
+            return gestureInitPromise;
+        }
+
         async function initMediaPipe() {
             try {
                 const mp = await import('@mediapipe/tasks-vision');
@@ -1857,20 +1888,29 @@
                 if (lpTimer) { clearTimeout(lpTimer); lpTimer = null; }
             });
 
-            // 手势控制：默认自动开启，按钮平时隐藏；自动开启失败时（手机端）由 init 显示出来供手动重试
-            const btnGesture = document.getElementById('btn-gesture');
-            btnGesture.style.display = 'none';
-            btnGesture.onclick = async (e) => {
+            // 手势互动入口：点击时主动申请摄像头权限（浏览器要求用户操作后才弹权限窗）
+            const gestureCta = document.getElementById('gesture-cta');
+            gestureCta.addEventListener('click', async (e) => {
                 e.stopPropagation();
-                if (btnGesture.dataset.state === 'loading' || btnGesture.dataset.state === 'on') return;
-                btnGesture.dataset.state = 'loading';
-                btnGesture.textContent = '启动中...';
-                const ok = await initMediaPipe();
-                btnGesture.textContent = ok ? '手势已开启' : '手势不可用';
-                btnGesture.dataset.state = ok ? 'on' : 'off';
-                btnGesture.classList.toggle('disabled', !ok);
-                if (ok) showToast('手势已开启：张开手掌玩转圣诞树');
-            };
+                if (gestureCta.dataset.state === 'loading' || gestureCta.dataset.state === 'on') return;
+                gestureCta.dataset.state = 'loading';
+                gestureCta.textContent = '正在开启手势...';
+                // 20 秒无响应视为失败（部分浏览器不弹权限窗），保持按钮可重试
+                const ok = await Promise.race([
+                    startGesture(),
+                    new Promise(res => setTimeout(() => res('timeout'), 20000))
+                ]);
+                if (ok === true) {
+                    gestureCta.dataset.state = 'on';
+                    gestureCta.classList.add('hidden');
+                    setTimeout(() => gestureCta.remove(), 600);
+                    showToast('手势已开启：手掌缩放 · 食指看照片 · 竖拇指换色');
+                } else {
+                    gestureCta.dataset.state = 'off';
+                    gestureCta.innerHTML = '<span class="cta-icon">✋</span>手势不可用 点击重试';
+                    showToast(ok === 'timeout' ? '摄像头无响应，请点击重试或在浏览器设置中允许摄像头' : '无法访问摄像头，请允许摄像头权限后重试');
+                }
+            });
 
             // 移动端菜单开合
             document.getElementById('menu-toggle').addEventListener('click', (e) => {
