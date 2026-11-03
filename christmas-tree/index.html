@@ -182,7 +182,7 @@
     <div id="canvas-container"></div>
 
     <div id="ui-layer">
-        <div id="main-title">Merry Christmas</div>
+        <div id="main-title"></div>
 
         <button id="menu-toggle" aria-label="菜单">☰</button>
 
@@ -361,9 +361,16 @@
                 onResize();
                 bakeBaseOpacity();
 
-                // 桌面端保持原版行为：自动开启手势识别；手机端改为按钮手动开启
-                if (!IS_MOBILE) initMediaPipe().catch(console.warn);
-                else document.getElementById('btn-gesture').style.display = 'block';
+                // 全平台自动开启手势识别（缩放/看照片/换颜色）；失败时手机端提供手动重试按钮
+                initMediaPipe().then(ok => {
+                    if (!ok && IS_MOBILE) {
+                        const b = document.getElementById('btn-gesture');
+                        b.style.display = 'block';
+                        b.textContent = '开启手势';
+                        b.classList.remove('disabled');
+                        b.dataset.state = 'off';
+                    }
+                }).catch(console.warn);
 
                 window.__xtreeReady = true;
                 const loader = document.getElementById('loader');
@@ -1850,9 +1857,9 @@
                 if (lpTimer) { clearTimeout(lpTimer); lpTimer = null; }
             });
 
-            // 手势控制（手机端手动开启，按需加载模型）
+            // 手势控制：默认自动开启，按钮平时隐藏；自动开启失败时（手机端）由 init 显示出来供手动重试
             const btnGesture = document.getElementById('btn-gesture');
-            if (!IS_MOBILE) btnGesture.style.display = 'none';
+            btnGesture.style.display = 'none';
             btnGesture.onclick = async (e) => {
                 e.stopPropagation();
                 if (btnGesture.dataset.state === 'loading' || btnGesture.dataset.state === 'on') return;
