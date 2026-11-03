@@ -295,6 +295,7 @@
         import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
         import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
         import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+        import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
 
         /* ================================================================
          * 设备适配：粒子数量/画质全平台一致（InstancedMesh + GPU 粒子足够快），
@@ -316,7 +317,7 @@
                 barbieViolet: 0xd461e3
             },
             particles: {
-                count: 2200, dustCount: 1900, sparkleCount: 330,
+                count: 2600, dustCount: 2200, sparkleCount: 380,
                 treeHeight: 28, treeRadius: 9,
                 snowCount: 2600, snowSpeed: 10, galaxyCount: 3800, heartCount: 1600
             },
@@ -701,11 +702,12 @@
                 new THREE.Vector3(0.3, 0.4, 0)
             ]);
             const defs = [
-                { type: 'BOX',         frac: 0.35, geo: () => new THREE.BoxGeometry(0.45, 0.45, 0.45) },
-                { type: 'GOLD_BOX',    frac: 0.35, geo: () => new THREE.BoxGeometry(0.45, 0.45, 0.45) },
-                { type: 'GOLD_SPHERE', frac: 0.20, geo: () => new THREE.SphereGeometry(0.5, 16, 16) },
-                { type: 'RED',         frac: 0.06, geo: () => new THREE.SphereGeometry(0.5, 16, 12) },
-                { type: 'CANE',        frac: 0.04, geo: () => new THREE.TubeGeometry(caneCurve, 8, 0.08, 6, false) },
+                // 圆角立方体 / 高分段球体 / 高分段拐杖糖：近看更精致
+                { type: 'BOX',         frac: 0.35, geo: () => new RoundedBoxGeometry(0.45, 0.45, 0.45, 3, 0.09) },
+                { type: 'GOLD_BOX',    frac: 0.35, geo: () => new RoundedBoxGeometry(0.45, 0.45, 0.45, 3, 0.09) },
+                { type: 'GOLD_SPHERE', frac: 0.20, geo: () => new THREE.SphereGeometry(0.5, 24, 24) },
+                { type: 'RED',         frac: 0.06, geo: () => new THREE.SphereGeometry(0.5, 24, 16) },
+                { type: 'CANE',        frac: 0.04, geo: () => new THREE.TubeGeometry(caneCurve, 12, 0.08, 8, false) },
             ];
 
             for (const d of defs) {
@@ -1468,13 +1470,27 @@
 
         /* ================================================================
          * 手势识别（MediaPipe）：由"开启手势互动"按钮触发（需要用户操作才弹权限窗）
+         * 顺序：先申请摄像头（权限窗紧跟用户点击，弹得出来）→ 再下载模型（首次较慢）
          * ================================================================ */
         let gestureInitPromise = null;
-        function startGesture() {
-            // 防止重复初始化（权限窗挂起时用户再点重试，不会创建多个摄像头流）
+        let gestureStream = null;
+
+        function onGestureReady() {
+            const cta = document.getElementById('gesture-cta');
+            if (cta) {
+                cta.dataset.state = 'on';
+                cta.classList.add('hidden');
+                setTimeout(() => cta.remove(), 600);
+            }
+            showToast('手势已开启：手掌缩放 · 食指看照片 · 竖拇指换色');
+        }
+
+        function startGesture(onStep) {
+            // 防止重复初始化（模型加载期间用户再点重试，不会创建多个摄像头流）
             if (!gestureInitPromise) {
-                gestureInitPromise = initMediaPipe().then(ok => {
-                    if (ok !== true) gestureInitPromise = null; // 失败允许重试
+                gestureInitPromise = initMediaPipe(onStep).then(ok => {
+                    if (ok === true) onGestureReady();
+                    else gestureInitPromise = null; // 失败允许重试
                     return ok;
                 }).catch(err => {
                     gestureInitPromise = null;
@@ -1484,8 +1500,25 @@
             return gestureInitPromise;
         }
 
-        async function initMediaPipe() {
+        async function initMediaPipe(onStep) {
             try {
+                // 1) 先申请摄像头：必须紧跟用户点击的调用栈，权限弹窗才可靠出现
+                if (!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia)) {
+                    console.warn('摄像头不可用');
+                    return false;
+                }
+                if (!gestureStream || !gestureStream.active) {
+                    gestureStream = await navigator.mediaDevices.getUserMedia({
+                        video: {
+                            facingMode: "user",
+                            width: { ideal: 640 },
+                            height: { ideal: 480 }
+                        }
+                    });
+                }
+                onStep && onStep('正在加载手势模型...');
+
+                // 2) 加载 MediaPipe 模型（首次需下载数 MB）
                 const mp = await import('@mediapipe/tasks-vision');
                 const { FilesetResolver, HandLandmarker, DrawingUtils } = mp;
 
@@ -1503,35 +1536,22 @@
                 canvasCtx = document.getElementById('webcam-preview').getContext('2d');
                 drawingUtils = new DrawingUtils(canvasCtx);
 
-                if (navigator.mediaDevices?.getUserMedia) {
-                    const stream = await navigator.mediaDevices.getUserMedia({
-                        video: {
-                            facingMode: "user",
-                            width: { ideal: 640 },
-                            height: { ideal: 480 }
-                        }
-                    });
-                    video.srcObject = stream;
+                video.srcObject = gestureStream;
+                await new Promise((resolve) => {
+                    video.addEventListener("loadeddata", resolve, { once: true });
+                });
 
-                    await new Promise((resolve) => {
-                        video.addEventListener("loadeddata", resolve, { once: true });
-                    });
+                video.play();
+                const wrapper = document.getElementById('webcam-wrapper');
+                wrapper.style.opacity = 1;
+                const aspect = video.videoWidth / video.videoHeight || (4 / 3);
+                wrapper.style.width = IS_MOBILE ? '96px' : '120px';
+                wrapper.style.height = ((IS_MOBILE ? 96 : 120) / aspect) + 'px';
+                document.getElementById('webcam-preview').width = video.videoWidth;
+                document.getElementById('webcam-preview').height = video.videoHeight;
 
-                    video.play();
-                    const wrapper = document.getElementById('webcam-wrapper');
-                    wrapper.style.opacity = 1;
-                    const aspect = video.videoWidth / video.videoHeight || (4 / 3);
-                    wrapper.style.width = IS_MOBILE ? '96px' : '120px';
-                    wrapper.style.height = ((IS_MOBILE ? 96 : 120) / aspect) + 'px';
-                    document.getElementById('webcam-preview').width = video.videoWidth;
-                    document.getElementById('webcam-preview').height = video.videoHeight;
-
-                    predictWebcam();
-                    return true;
-                } else {
-                    console.warn('摄像头不可用');
-                    return false;
-                }
+                predictWebcam();
+                return true;
             } catch (error) {
                 console.error('MediaPipe初始化失败:', error);
                 return false;
@@ -1894,22 +1914,19 @@
                 e.stopPropagation();
                 if (gestureCta.dataset.state === 'loading' || gestureCta.dataset.state === 'on') return;
                 gestureCta.dataset.state = 'loading';
-                gestureCta.textContent = '正在开启手势...';
-                // 20 秒无响应视为失败（部分浏览器不弹权限窗），保持按钮可重试
+                gestureCta.textContent = '正在申请摄像头权限...';
+                // 60 秒兜底（模型首次下载可能较慢）；期间可点重试继续等待
+                let timedOut = false;
                 const ok = await Promise.race([
-                    startGesture(),
-                    new Promise(res => setTimeout(() => res('timeout'), 20000))
+                    startGesture(step => { if (!timedOut && step) gestureCta.textContent = step; }),
+                    new Promise(res => setTimeout(() => { timedOut = true; res('timeout'); }, 60000))
                 ]);
-                if (ok === true) {
-                    gestureCta.dataset.state = 'on';
-                    gestureCta.classList.add('hidden');
-                    setTimeout(() => gestureCta.remove(), 600);
-                    showToast('手势已开启：手掌缩放 · 食指看照片 · 竖拇指换色');
-                } else {
-                    gestureCta.dataset.state = 'off';
-                    gestureCta.innerHTML = '<span class="cta-icon">✋</span>手势不可用 点击重试';
-                    showToast(ok === 'timeout' ? '摄像头无响应，请点击重试或在浏览器设置中允许摄像头' : '无法访问摄像头，请允许摄像头权限后重试');
-                }
+                if (ok === true) return; // 成功：onGestureReady 已隐藏按钮
+                gestureCta.dataset.state = 'off';
+                gestureCta.innerHTML = '<span class="cta-icon">✋</span>手势不可用 点击重试';
+                showToast(ok === 'timeout'
+                    ? '模型加载较慢，请稍候或点击重试'
+                    : '无法访问摄像头，请允许摄像头权限后重试');
             });
 
             // 移动端菜单开合
