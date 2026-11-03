@@ -135,6 +135,8 @@
 
         #toast { position: absolute; bottom: 8%; left: 50%; transform: translateX(-50%); max-width: 82vw; background: rgba(10,10,10,.82); border: 1px solid rgba(212,175,55,.5); color: #d4af37; padding: 10px 24px; border-radius: 22px; font-size: 13px; letter-spacing: .12em; z-index: 300; opacity: 0; transition: opacity .4s; pointer-events: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
+        #gesture-status { position: absolute; bottom: 10px; left: 10px; z-index: 55; color: rgba(212,175,55,.9); font-size: 11px; letter-spacing: .08em; background: rgba(0,0,0,.5); padding: 4px 10px; border-radius: 10px; pointer-events: none; display: none; white-space: nowrap; }
+
         /* ---------- 手势互动入口 ---------- */
         #gesture-cta {
             position: absolute;
@@ -257,6 +259,7 @@
     <button id="gesture-cta"><span class="cta-icon">✋</span>开启手势互动</button>
 
     <div id="toast"></div>
+    <div id="gesture-status"></div>
 
     <audio id="bg-music" loop crossorigin="anonymous"></audio>
 
@@ -1518,8 +1521,9 @@
                     });
                 }
                 onStep && onStep('正在加载手势模型...');
+                setGestureStatus('摄像头已就绪，加载手势模型...', true);
 
-                // 2) 加载 MediaPipe 模型（首次需下载数 MB）
+                // 2) 加载 MediaPipe 模型（模型文件托管在本站 /models/ 下，不依赖被墙的谷歌源）
                 const mp = await import('@mediapipe/tasks-vision');
                 const { FilesetResolver, HandLandmarker, DrawingUtils } = mp;
 
@@ -1527,7 +1531,7 @@
                 // GPU 加速在部分设备上不可用，失败自动回落 CPU 兼容模式
                 const makeLandmarker = (delegate) => HandLandmarker.createFromOptions(vision, {
                     baseOptions: {
-                        modelAssetPath: `https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task`,
+                        modelAssetPath: './models/hand_landmarker.task',
                         delegate
                     },
                     runningMode: "VIDEO",
@@ -1537,8 +1541,10 @@
                     handLandmarker = await makeLandmarker("GPU");
                 } catch (gpuErr) {
                     console.warn('GPU delegate 不可用，改用 CPU:', gpuErr);
+                    setGestureStatus('GPU 不可用，切换 CPU 模式...', true);
                     handLandmarker = await makeLandmarker("CPU");
                 }
+                setGestureStatus('模型就绪，启动识别...', true);
 
                 video = document.getElementById('webcam');
                 canvasCtx = document.getElementById('webcam-preview').getContext('2d');
@@ -1562,6 +1568,7 @@
                 return true;
             } catch (error) {
                 console.error('MediaPipe初始化失败:', error);
+                setGestureStatus('手势初始化失败：' + (error && error.message ? error.message.slice(0, 60) : '未知错误'), true);
                 return false;
             }
         }
@@ -1569,8 +1576,16 @@
         let lastVideoTime = -1;
         let detectErrorCount = 0;
         let switchedToCPU = false;
+        let statusFrame = 0;
         async function predictWebcam() {
             if (!handLandmarker || !video) return;
+
+            if (video.readyState < 2) {
+                statusFrame++;
+                if (statusFrame % 30 === 0) setGestureStatus('等待摄像头画面...', true);
+                requestAnimationFrame(predictWebcam);
+                return;
+            }
 
             if (lastVideoTime !== video.currentTime && video.readyState >= 2) {
                 lastVideoTime = video.currentTime;
@@ -1579,6 +1594,11 @@
                     detectErrorCount = 0;
                     canvasCtx.clearRect(0, 0, canvasCtx.canvas.width, canvasCtx.canvas.height);
                     canvasCtx.drawImage(video, 0, 0, canvasCtx.canvas.width, canvasCtx.canvas.height);
+
+                    statusFrame++;
+                    if (statusFrame % 15 === 0) {
+                        setGestureStatus(result.landmarks?.[0] ? '已检测到手 ✓' : '未检测到手 · 请把手伸到镜头前', true);
+                    }
 
                     if (result.landmarks?.[0]) {
                         if (!STATE.firstHandSeen) {
@@ -1594,6 +1614,7 @@
                 } catch (error) {
                     detectErrorCount++;
                     console.error('手势识别失败:', error);
+                    setGestureStatus('识别出错 x' + detectErrorCount + (switchedToCPU ? ' · 已切兼容模式' : ''), true);
                     // GPU 推理连续报错时自动切换 CPU 兼容模式
                     if (detectErrorCount >= 5 && !switchedToCPU) {
                         switchedToCPU = true;
@@ -1807,6 +1828,13 @@
             t.style.opacity = 1;
             clearTimeout(toastTimer);
             toastTimer = setTimeout(() => { t.style.opacity = 0; }, 2200);
+        }
+
+        function setGestureStatus(text, show) {
+            const s = document.getElementById('gesture-status');
+            if (!s) return;
+            s.textContent = text;
+            s.style.display = show === false ? 'none' : 'block';
         }
 
         function setupEvents() {
